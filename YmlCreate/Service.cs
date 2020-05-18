@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Gdk;
-using Gtk;
 
 namespace YmlCreate
 {
@@ -10,12 +8,16 @@ namespace YmlCreate
     public class Service
     {
         public string Name { get; set; }
-        public Pixbuf Img { get; set; }
+        public Gdk.Pixbuf Img { get; set; }
 
-        public Service(string n,Pixbuf i)
+        public Service(string n, Gdk.Pixbuf i)
         {
             Name = n;
             Img = i;
+        }
+        public Service(string n)
+        {
+            Name = n;
         }
     }
     [Serializable]

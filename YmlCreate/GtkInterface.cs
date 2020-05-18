@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using Gdk;
 using Gtk;
@@ -101,7 +102,7 @@ namespace YmlCreate
 
 			//All Services StoreList of string and Image
 			AllServices = new ListStore(typeof(string), typeof(Pixbuf));
-			Pixbuf temp = new Pixbuf(@"C:\Users\Администратор.BERGESS\source\repos\YmlCreate\YmlCreate\Imgs\OracleWebLogicServer_clr.png",64,64);
+			Pixbuf temp = new Pixbuf(@"C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\Imgs\OracleWebLogicServer_clr.png",64,64);
 			AllServices.AppendValues("Oracle WebLogic Server", temp);
 			AllServices.AppendValues("Oracle WebLogic Server", temp);
 			AllServices.AppendValues("Oracle WebLogic Server", temp);
