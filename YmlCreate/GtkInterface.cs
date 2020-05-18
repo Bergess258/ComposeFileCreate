@@ -115,7 +115,7 @@ namespace YmlCreate
 			//Adding services to store
 			foreach (Service service in Program.AllServices)
 				if(service.Img!=null)
-					AllServices.AppendValues(service.Name,service.Img);
+					AllServices.AppendValues(service.Name,new Pixbuf(service.Img,64,64));
 				else
 					AllServices.AppendValues(service.Name, new Pixbuf(Resources.DefultServiceIcon));
 			AllServices.SetSortColumnId(0, SortType.Ascending);
