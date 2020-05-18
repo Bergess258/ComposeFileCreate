@@ -8,9 +8,9 @@ namespace YmlCreate
     public class Service
     {
         public string Name { get; set; }
-        public Gdk.Pixbuf Img { get; set; }
+        public byte[] Img { get; set; }
 
-        public Service(string n, Gdk.Pixbuf i)
+        public Service(string n, byte[] i)
         {
             Name = n;
             Img = i;

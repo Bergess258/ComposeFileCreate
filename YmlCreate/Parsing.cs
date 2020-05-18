@@ -45,7 +45,6 @@ namespace YmlCreate
                 {
                     HtmlNode loc = serviceNode.FirstChild.FirstChild.FirstChild.FirstChild;
                     string name = loc.Attributes[0].Value;
-                    byte[] img = new byte[0];
                     if (loc.Name == "img"&&loc.Attributes["src"].Value!="")
                     {
                         using (var response = client.GetAsync(loc.Attributes[2].Value))
@@ -54,10 +53,7 @@ namespace YmlCreate
                             using (var inputStream = response.Result.Content.ReadAsByteArrayAsync())
                             {
                                 if (response.Result.StatusCode != HttpStatusCode.NotFound)
-                                {
-                                    img = inputStream.Result;
-                                    AllServices.services.Add(new Service(name.Remove(name.Length - 5), new Gdk.Pixbuf(img)));
-                                }
+                                    AllServices.services.Add(new Service(name.Remove(name.Length - 5), inputStream.Result));
                                 else
                                     AllServices.services.Add(new Service(name.Remove(name.Length - 5)));
                             }
