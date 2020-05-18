@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DefultServiceIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>imgs\iconfinder_box_cube_3d_perspective_shape_6140919.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="IconOwnService" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>imgs\iconfinder_-_database_hosting_network_server-04_882783.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="OracleWebLogicServer_clr" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>imgs\oracleweblogicserver_clr.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

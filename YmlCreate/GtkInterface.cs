@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Gdk;
 using Gtk;
@@ -102,27 +105,19 @@ namespace YmlCreate
 
 			//All Services StoreList of string and Image
 			AllServices = new ListStore(typeof(string), typeof(Pixbuf));
-			Pixbuf temp = new Pixbuf(@"C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\Imgs\OracleWebLogicServer_clr.png",64,64);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
-			AllServices.AppendValues("Oracle WebLogic Server", temp);
+
+			//Deserialization of all services
+			IFormatter formatter = new BinaryFormatter();
+			Stream stream = new FileStream("MyFile.bin", FileMode.Open, FileAccess.Read, FileShare.Read);
+			Program.AllServices = (List<Service>)formatter.Deserialize(stream);
+			stream.Close();
+
+			//Adding services to store
+			foreach (Service service in Program.AllServices)
+				if(service.Img!=null)
+					AllServices.AppendValues(service.Name,service.Img);
+				else
+					AllServices.AppendValues(service.Name, new Pixbuf(Resources.DefultServiceIcon));
 			AllServices.SetSortColumnId(0, SortType.Ascending);
 
 			GtkScrolledWindow1 = new ScrolledWindow();

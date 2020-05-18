@@ -63,9 +63,9 @@ namespace YmlCreate {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] IconOwnService {
+        internal static byte[] DefultServiceIcon {
             get {
-                object obj = ResourceManager.GetObject("IconOwnService", resourceCulture);
+                object obj = ResourceManager.GetObject("DefultServiceIcon", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace YmlCreate {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
-        internal static byte[] OracleWebLogicServer_clr {
+        internal static byte[] IconOwnService {
             get {
-                object obj = ResourceManager.GetObject("OracleWebLogicServer_clr", resourceCulture);
+                object obj = ResourceManager.GetObject("IconOwnService", resourceCulture);
                 return ((byte[])(obj));
             }
         }
