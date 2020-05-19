@@ -35,7 +35,7 @@ namespace YmlCreate
             //Just for sure
             ServicePointManager.DefaultConnectionLimit = 20;
 
-            WebDriverWait waitForElement = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+            WebDriverWait waitForElement = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
             HttpClient client = new HttpClient();
             foreach (string page in pages)
             {
@@ -48,25 +48,20 @@ namespace YmlCreate
                     HtmlNode loc = serviceNode.FirstChild.FirstChild.FirstChild.FirstChild;
                     string name = loc.Attributes[0].Value;
                     name = name.Remove(name.Length - 5);
-                    if (loc.Name == "img" && loc.Attributes["src"].Value != "")
+                    if (loc.Name == "img")
                     {
-                        using (var response = client.GetAsync(loc.Attributes[2].Value))
+                        using (var response = client.GetAsync(loc.Attributes["src"].Value))
                         {
                             response.Wait();
-                            using (var inputStream = response.Result.Content.ReadAsByteArrayAsync())
-                            {
-                                if (response.Result.StatusCode != HttpStatusCode.NotFound)
+                            if (response.Result.StatusCode != HttpStatusCode.NotFound)
+                                using (var inputStream = response.Result.Content.ReadAsByteArrayAsync())
                                     AllServices.services.Add(new Service(name, inputStream.Result));
-                                else
-                                    AllServices.services.Add(new Service(name));
-                            }
+                            else
+                                AllServices.services.Add(new Service(name));
                         }
                     }
                     else
-                        if(loc.Name=="g")
-                            AllServices.services.Add(new Service(serviceNode.SelectSingleNode("//div[@class='styles__name___2198b']").InnerText));
-                        else
-                            AllServices.services.Add(new Service(name));
+                        AllServices.services.Add(new Service(serviceNode.SelectSingleNode("//div[@class='styles__name___2198b']").InnerText));
                 }
             }
             client.Dispose();

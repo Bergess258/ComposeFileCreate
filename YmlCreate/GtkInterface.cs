@@ -121,10 +121,9 @@ namespace YmlCreate
 			vbox4.Spacing = 1;
 
 			LoadAllServices();
-
 			//All Services StoreList of string and Image
 			AllServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf));
-
+			AllServices.SetSortColumnId(0, SortType.Ascending);
 			int c = 0;
 			//Adding services to store
 			foreach (Service service in Program.AllServices)
@@ -132,7 +131,6 @@ namespace YmlCreate
 					AllServices.AppendValues(c++,service.Name, new Pixbuf(service.Img, 64, 64));
 				else
 					AllServices.AppendValues(c++,service.Name, DefaultServiceIcon);
-			AllServices.SetSortColumnId(0, SortType.Ascending);
 
 			GtkScrolledWindow1 = new ScrolledWindow();
 			GtkScrolledWindow1.Name = "GtkScrolledWindow1";
