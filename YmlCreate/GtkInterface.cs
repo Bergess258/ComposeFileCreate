@@ -5,8 +5,11 @@ using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Linq;
 using Gdk;
 using Gtk;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace YmlCreate
 {
@@ -15,6 +18,7 @@ namespace YmlCreate
 		const int Col_DisplayName = 1;
 		const int Col_Pixbuf = 2;
 		const int IV_ItemWidth = 70;
+		static Pixbuf DefaultServiceIcon = new Pixbuf(Resources.DefultServiceIcon);
 
 		private HBox hbox1;
 
@@ -32,12 +36,15 @@ namespace YmlCreate
 
 		private HBox hbox3;
 
-		private Entry SearchS;
+		private static Entry SearchS;
 
 
-		private IconView IV_AllServices;
+		private static IconView IV_AllServices;
 		private ScrolledWindow GtkScrolledWindow1;
-		private ListStore AllServices;
+		private static ListStore AllServices;
+		private static CancellationTokenSource ts = new CancellationTokenSource();
+		private static CancellationToken ct = ts.Token;
+		private Task T_Search = new Task(Search,ct);
 
 		private IconView IV_SelectedServices;
 		private ScrolledWindow GtkScrolledWindow2;
@@ -71,19 +78,26 @@ namespace YmlCreate
 			label1.SingleLineMode = true;
 			label1.Expand = false;
 			vbox1.PackStart(label1, false, false, 0);
-			//All Services StoreList of string and Image
+
+			//For Selected Services scrolled window
+			GtkScrolledWindow2 = new ScrolledWindow();
+			GtkScrolledWindow2.Name = "GtkScrolledWindow1";
+			GtkScrolledWindow2.ShadowType = ((ShadowType)(1));
+
+			//Selected Services StoreList of string and Image
 			SelectedServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf));
 			Pixbuf OwnService = new Pixbuf(Resources.IconOwnService);
 			SelectedServices.AppendValues(0,"Свой сервис", OwnService);
 			SelectedServices.SetSortColumnId(0, SortType.Ascending);
-			// All Services IconViewSettings
+			// Selected Services IconViewSettings
 			IV_SelectedServices = new IconView(SelectedServices);
 			IV_SelectedServices.CanFocus = true;
 			IV_SelectedServices.Name = "IV_SelectedServices";
 			IV_SelectedServices.ItemWidth = IV_ItemWidth;
 			IV_SelectedServices.TextColumn = Col_DisplayName;
 			IV_SelectedServices.PixbufColumn = Col_Pixbuf;
-			vbox1.PackStart(IV_SelectedServices, true, true, 0);
+			GtkScrolledWindow2.Add(IV_SelectedServices);
+			vbox1.Add(GtkScrolledWindow2);
 			IV_SelectedServices.GrabFocus();
 			hbox1.Add(vbox1);
 			// Container child hbox1.Gtk.Box+BoxChild
@@ -103,17 +117,18 @@ namespace YmlCreate
 			vbox4.Name = "vbox4";
 			vbox4.Spacing = 1;
 
+			LoadAllServices();
+
 			//All Services StoreList of string and Image
 			AllServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf));
 
-			LoadAllServices();
 			int c = 0;
 			//Adding services to store
 			foreach (Service service in Program.AllServices)
 				if (service.Img != null)
 					AllServices.AppendValues(c++,service.Name, new Pixbuf(service.Img, 64, 64));
 				else
-					AllServices.AppendValues(c++,service.Name, new Pixbuf(Resources.DefultServiceIcon));
+					AllServices.AppendValues(c++,service.Name, DefaultServiceIcon);
 			AllServices.SetSortColumnId(0, SortType.Ascending);
 
 			GtkScrolledWindow1 = new ScrolledWindow();
@@ -142,6 +157,8 @@ namespace YmlCreate
 			SearchS.Text = "Введите название сервиса для поиска";
 			SearchS.IsEditable = true;
 			SearchS.InvisibleChar = '●';
+			SearchS.Changed += new EventHandler(OnSearchSChanged);
+
 			hbox3.Add(SearchS);
 			hbox3.SetChildPacking(SearchS, false, false, 0, PackType.Start);
 			// Container child hbox3.Gtk.Box+BoxChild
@@ -149,7 +166,7 @@ namespace YmlCreate
 			Btn_Search.CanFocus = true;
 			Btn_Search.Name = "Btn_Search";
 			Btn_Search.UseUnderline = true;
-			Btn_Search.Label = "Поиск";
+			Btn_Search.Label = "Очистить поиск";
 			hbox3.Add(Btn_Search);
 			hbox3.SetChildPacking(Btn_Search, false, false, 0, PackType.Start);
 			vbox4.Add(hbox3);
@@ -181,6 +198,43 @@ namespace YmlCreate
 			Application.Quit();
 			a.RetVal = true;
 		}
-
+		#region SearchLogic
+		static void Search()
+		{
+			if (SearchS.Text != "")
+			{
+				int c = 0;
+				ListStore temp = new ListStore(typeof(int), typeof(string), typeof(Pixbuf));
+				temp.SetSortColumnId(0, SortType.Ascending);
+				IV_AllServices.Model = temp;
+				foreach (object[] t in AllServices)
+				{
+					string Name = (string)t[1];
+					Pixbuf Img = (Pixbuf)t[2];
+					if (Name.Contains(SearchS.Text))
+					{
+						if (Img != null)
+							temp.AppendValues(c++, Name, Img);
+						else
+							temp.AppendValues(c++, Name, DefaultServiceIcon);
+						Thread.Sleep(0);
+					}
+				}
+			}
+			else
+				IV_AllServices.Model = AllServices;
+		}
+		protected void OnSearchSChanged(object sender, EventArgs e)
+		{
+			if (T_Search.Status == TaskStatus.Running)
+			{
+				ts.Cancel();
+				ts = new CancellationTokenSource();
+				ct = ts.Token;
+			}
+			T_Search = new Task(Search, ct);
+			T_Search.Start();
+		}
+		#endregion
 	}
 }
