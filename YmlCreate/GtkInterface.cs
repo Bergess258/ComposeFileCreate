@@ -196,6 +196,7 @@ namespace YmlCreate
 			DefaultHeight = 400;
 			ShowAll();
 			DeleteEvent += new DeleteEventHandler(OnDeleteEvent);
+			IV_AllServices.ItemActivated += new ItemActivatedHandler(OnIV_AllServicesItemActivated);
 		}
 
 		private static void LoadAllServices()
@@ -220,6 +221,7 @@ namespace YmlCreate
 				int c = 0;
 				ListStore temp = new ListStore(typeof(int), typeof(string), typeof(Pixbuf));
 				temp.SetSortColumnId(0, SortType.Ascending);
+				IV_AllServices.FreezeChildNotify();
 				IV_AllServices.Model = temp;
 				foreach (object[] t in AllServices)
 				{
@@ -233,6 +235,7 @@ namespace YmlCreate
 							temp.AppendValues(c++, Name, DefaultServiceIcon);
 					}
 				}
+				IV_AllServices.ThawChildNotify();
 			}
 			else
 				IV_AllServices.Model = AllServices;
@@ -250,5 +253,19 @@ namespace YmlCreate
 			T_Search.Start();
 		}
 		#endregion
+
+		protected void OnIV_AllServicesItemActivated(object o, ItemActivatedArgs a)
+		{
+			TreeIter iter;
+			IV_AllServices.FreezeChildNotify();
+			IV_AllServices.Model.GetIter(out iter,a.Path);
+			int c = (int)(IV_AllServices.Model.GetValue(iter, 0));
+			string name = IV_AllServices.Model.GetValue(iter, 1).ToString();
+			Pixbuf Img = (Pixbuf)(IV_AllServices.Model.GetValue(iter, 2));
+			SelectedServices.AppendValues(c,name,Img);
+			IV_AllServices.ThawChildNotify();
+			AllServices.Remove(ref iter);
+			OnSearchSChanged(new object(),new EventArgs());
+		}
 	}
 }
