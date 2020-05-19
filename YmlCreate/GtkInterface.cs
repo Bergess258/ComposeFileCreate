@@ -12,8 +12,8 @@ namespace YmlCreate
 {
 	public partial class MainWindow : Gtk.Window
 	{
-		const int Col_DisplayName = 0;
-		const int Col_Pixbuf = 1;
+		const int Col_DisplayName = 1;
+		const int Col_Pixbuf = 2;
 		const int IV_ItemWidth = 70;
 
 		private HBox hbox1;
@@ -72,9 +72,9 @@ namespace YmlCreate
 			label1.Expand = false;
 			vbox1.PackStart(label1, false, false, 0);
 			//All Services StoreList of string and Image
-			SelectedServices = new ListStore(typeof(string), typeof(Pixbuf));
+			SelectedServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf));
 			Pixbuf OwnService = new Pixbuf(Resources.IconOwnService);
-			SelectedServices.AppendValues("Свой сервис", OwnService);
+			SelectedServices.AppendValues(0,"Свой сервис", OwnService);
 			SelectedServices.SetSortColumnId(0, SortType.Ascending);
 			// All Services IconViewSettings
 			IV_SelectedServices = new IconView(SelectedServices);
@@ -104,20 +104,16 @@ namespace YmlCreate
 			vbox4.Spacing = 1;
 
 			//All Services StoreList of string and Image
-			AllServices = new ListStore(typeof(string), typeof(Pixbuf));
+			AllServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf));
 
-			//Deserialization of all services
-			IFormatter formatter = new BinaryFormatter();
-			Stream stream = new FileStream("MyFile.bin", FileMode.Open, FileAccess.Read, FileShare.Read);
-			Program.AllServices = (List<Service>)formatter.Deserialize(stream);
-			stream.Close();
-
+			LoadAllServices();
+			int c = 0;
 			//Adding services to store
 			foreach (Service service in Program.AllServices)
-				if(service.Img!=null)
-					AllServices.AppendValues(service.Name,new Pixbuf(service.Img,64,64));
+				if (service.Img != null)
+					AllServices.AppendValues(c++,service.Name, new Pixbuf(service.Img, 64, 64));
 				else
-					AllServices.AppendValues(service.Name, new Pixbuf(Resources.DefultServiceIcon));
+					AllServices.AppendValues(c++,service.Name, new Pixbuf(Resources.DefultServiceIcon));
 			AllServices.SetSortColumnId(0, SortType.Ascending);
 
 			GtkScrolledWindow1 = new ScrolledWindow();
@@ -169,6 +165,15 @@ namespace YmlCreate
 			DefaultHeight = 400;
 			ShowAll();
 			DeleteEvent += new DeleteEventHandler(OnDeleteEvent);
+		}
+
+		private static void LoadAllServices()
+		{
+			//Deserialization of all services
+			IFormatter formatter = new BinaryFormatter();
+			Stream stream = new FileStream("MyFile.bin", FileMode.Open, FileAccess.Read, FileShare.Read);
+			Program.AllServices = (List<Service>)formatter.Deserialize(stream);
+			stream.Close();
 		}
 
 		protected void OnDeleteEvent(object sender, DeleteEventArgs a)

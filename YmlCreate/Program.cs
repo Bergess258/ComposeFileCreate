@@ -8,12 +8,12 @@ namespace YmlCreate
         public static List<Service> AllServices;
         static void Main(string[] args)
         {
-            Parsing.Start();
+            //Parsing.Start();
 
-            //Application.Init();
-            ////Create the Window
-            //MainWindow main = new MainWindow();
-            //Application.Run();
+            Application.Init();
+            //Create the Window
+            MainWindow main = new MainWindow();
+            Application.Run();
         }
     }
 }
