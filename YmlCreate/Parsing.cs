@@ -17,26 +17,28 @@ namespace YmlCreate
 {
     public class Parsing
     {
+        //Parsing Hub.Docker to get images and names of available services for docker-compose
         public static void Start()
         {
             var baseURL = @"https://hub.docker.com/search?q=&type=image";
             List<string> pages = new List<string>();
             pages.AddRange(
                 Enumerable
-                .Range(1, 97)
+                .Range(1, 99)
                 .Select(el => $"{baseURL}&page={el}")
             );
             HtmlDocument html = new HtmlDocument();
+
+            //Using Selenium because of content(services) loading on pages
             IWebDriver driver = new ChromeDriver();
-            //WebClient client = new WebClient();
-            //client.Proxy = null;
+
+            //Just for sure
             ServicePointManager.DefaultConnectionLimit = 20;
+
             WebDriverWait waitForElement = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
             HttpClient client = new HttpClient();
             foreach (string page in pages)
             {
-                //string txtHTML = GetPage(page);
-                //html.LoadHtml(txtHTML);
                 driver.Url = page;
                 waitForElement.Until(ExpectedConditions.ElementIsVisible(By.Id("searchResults")));
                 html.LoadHtml(driver.PageSource);
@@ -45,7 +47,8 @@ namespace YmlCreate
                 {
                     HtmlNode loc = serviceNode.FirstChild.FirstChild.FirstChild.FirstChild;
                     string name = loc.Attributes[0].Value;
-                    if (loc.Name == "img"&&loc.Attributes["src"].Value!="")
+                    name = name.Remove(name.Length - 5);
+                    if (loc.Name == "img" && loc.Attributes["src"].Value != "")
                     {
                         using (var response = client.GetAsync(loc.Attributes[2].Value))
                         {
@@ -53,21 +56,23 @@ namespace YmlCreate
                             using (var inputStream = response.Result.Content.ReadAsByteArrayAsync())
                             {
                                 if (response.Result.StatusCode != HttpStatusCode.NotFound)
-                                    AllServices.services.Add(new Service(name.Remove(name.Length - 5), inputStream.Result));
+                                    AllServices.services.Add(new Service(name, inputStream.Result));
                                 else
-                                    AllServices.services.Add(new Service(name.Remove(name.Length - 5)));
+                                    AllServices.services.Add(new Service(name));
                             }
                         }
-                        //img = client.DownloadData(loc.Attributes["src"].Value);
                     }
                     else
-                        AllServices.services.Add(new Service(name.Remove(name.Length - 5)));
+                        if(loc.Name=="g")
+                            AllServices.services.Add(new Service(serviceNode.SelectSingleNode("//div[@class='styles__name___2198b']").InnerText));
+                        else
+                            AllServices.services.Add(new Service(name));
                 }
             }
             client.Dispose();
             driver.Dispose();
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream("MyFile.bin", FileMode.Create, FileAccess.Write, FileShare.None);
+            Stream stream = new FileStream("MyFile.bin", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, AllServices.services);
             stream.Close();
         }
