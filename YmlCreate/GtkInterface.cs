@@ -34,6 +34,9 @@ namespace YmlCreate
 
 		private VBox vbox4;
 
+		private VBox Vbox_Search;
+		private Label Lbl_Search;
+
 		private HBox hbox3;
 
 		private static Entry SearchS;
@@ -149,17 +152,34 @@ namespace YmlCreate
 			hbox3 = new HBox();
 			hbox3.Name = "hbox3";
 			hbox3.Spacing = 6;
+
+			Vbox_Search = new VBox();
+			Vbox_Search.Name = "Vbox_Search";
+			Vbox_Search.Spacing = 1;
+
 			// Container child hbox3.Gtk.Box+BoxChild
 			SearchS = new Entry();
 			SearchS.WidthRequest = 230;
 			SearchS.CanFocus = true;
 			SearchS.Name = "SearchS";
-			SearchS.Text = "Введите название сервиса для поиска";
+			SearchS.Text = "";
 			SearchS.IsEditable = true;
 			SearchS.InvisibleChar = '●';
 			SearchS.Changed += new EventHandler(OnSearchSChanged);
 
-			hbox3.Add(SearchS);
+			
+			Lbl_Search = new Label();
+			Lbl_Search.Name = "Lbl_Search";
+			Lbl_Search.LabelProp = "Строка поиска сервиса";
+			Lbl_Search.Justify = Justification.Left;
+			Lbl_Search.SingleLineMode = true;
+			Lbl_Search.Xalign = 0F;
+
+			Vbox_Search.PackStart(Lbl_Search, false, false, 0);
+			Vbox_Search.PackStart(SearchS, false, false, 0);
+			//Just to create empty space after input field
+			Vbox_Search.PackStart(new Separator(Orientation.Horizontal), false, false, 0);
+			hbox3.Add(Vbox_Search);
 			hbox3.SetChildPacking(SearchS, false, false, 0, PackType.Start);
 			// Container child hbox3.Gtk.Box+BoxChild
 			Btn_Search = new Button();
@@ -174,10 +194,6 @@ namespace YmlCreate
 			vbox2.Add(vbox4);
 			hbox1.Add(vbox2);
 			Add(hbox1);
-			//if ((Child != null))
-			//{
-			//	Child.ShowAll();
-			//}
 			DefaultWidth = 817;
 			DefaultHeight = 400;
 			ShowAll();
@@ -217,7 +233,6 @@ namespace YmlCreate
 							temp.AppendValues(c++, Name, Img);
 						else
 							temp.AppendValues(c++, Name, DefaultServiceIcon);
-						Thread.Sleep(0);
 					}
 				}
 			}
@@ -229,6 +244,7 @@ namespace YmlCreate
 			if (T_Search.Status == TaskStatus.Running)
 			{
 				ts.Cancel();
+				Thread.Sleep(100);
 				ts = new CancellationTokenSource();
 				ct = ts.Token;
 			}
