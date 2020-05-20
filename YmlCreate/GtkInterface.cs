@@ -10,6 +10,7 @@ using Gdk;
 using Gtk;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace YmlCreate
 {
@@ -204,6 +205,7 @@ namespace YmlCreate
 			ShowAll();
 			DeleteEvent += new DeleteEventHandler(OnDeleteEvent);
 			IV_AllServices.ItemActivated += new ItemActivatedHandler(OnIV_AllServicesItemActivated);
+			Btn_Search.Clicked += new EventHandler(OnBtn_SearchClicked);
 		}
 
 		private static void LoadAllServices()
@@ -230,11 +232,12 @@ namespace YmlCreate
 				temp.SetSortColumnId(0, SortType.Ascending);
 				IV_AllServices.FreezeChildNotify();
 				IV_AllServices.Model = null;
+				AWQ uwu = new AWQ(SearchS.Text.ToCharArray());
 				foreach (object[] t in AllServices)
 				{
 					string Name = (string)t[1];
 					Pixbuf Img = (Pixbuf)t[2];
-					if (Name.StartsWith(SearchS.Text))
+					if (uwu.search(Name.ToCharArray()))
 					{
 						if (Img != null)
 							temp.AppendValues(c++, Name, Img);
@@ -274,6 +277,11 @@ namespace YmlCreate
 			IV_AllServices.ThawChildNotify();
 			AllServices.Remove(ref iter);
 			OnSearchSChanged(new object(),new EventArgs());
+		}
+
+		protected void OnBtn_SearchClicked(object sender, EventArgs e)
+		{
+			SearchS.Text = "";
 		}
 	}
 }
