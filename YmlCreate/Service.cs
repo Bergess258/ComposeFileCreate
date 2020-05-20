@@ -24,4 +24,8 @@ namespace YmlCreate
     {
         public static List<Service> services = new List<Service>();
     }
+    public class AllServiceOptions
+    {
+        public static 
+    }
 }

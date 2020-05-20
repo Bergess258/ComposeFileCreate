@@ -27,7 +27,6 @@ namespace YmlCreate
 
 		private Label label1;
 
-		private Button Btn_Search;
 		private Button Btn_Create;
 
 		private VBox vbox2;
@@ -181,19 +180,11 @@ namespace YmlCreate
 			Vbox_Search.PackStart(new Separator(Orientation.Horizontal), false, false, 0);
 			hbox3.Add(Vbox_Search);
 			hbox3.SetChildPacking(SearchS, false, false, 0, PackType.Start);
-			// Container child hbox3.Gtk.Box+BoxChild
-			Btn_Search = new Button();
-			Btn_Search.CanFocus = true;
-			Btn_Search.Name = "Btn_Search";
-			Btn_Search.UseUnderline = true;
-			Btn_Search.Label = "Очистить поиск";
 			Btn_Create = new Button();
 			Btn_Create.CanFocus = true;
 			Btn_Create.Name = "Btn_Search";
 			Btn_Create.UseUnderline = true;
 			Btn_Create.Label = "Создать Yaml";
-			hbox3.Add(Btn_Search);
-			hbox3.PackStart(Btn_Search, false, false, 0);
 			hbox3.PackStart(Btn_Create, false, false, 0);
 			vbox4.Add(hbox3);
 			vbox4.SetChildPacking(hbox3, false, false, 0, PackType.Start);
@@ -205,7 +196,6 @@ namespace YmlCreate
 			ShowAll();
 			DeleteEvent += new DeleteEventHandler(OnDeleteEvent);
 			IV_AllServices.ItemActivated += new ItemActivatedHandler(OnIV_AllServicesItemActivated);
-			Btn_Search.Clicked += new EventHandler(OnBtn_SearchClicked);
 		}
 
 		private static void LoadAllServices()
@@ -265,6 +255,7 @@ namespace YmlCreate
 		}
 		#endregion
 
+		//Service selection from all
 		protected void OnIV_AllServicesItemActivated(object o, ItemActivatedArgs a)
 		{
 			TreeIter iter;
@@ -277,11 +268,6 @@ namespace YmlCreate
 			IV_AllServices.ThawChildNotify();
 			AllServices.Remove(ref iter);
 			OnSearchSChanged(new object(),new EventArgs());
-		}
-
-		protected void OnBtn_SearchClicked(object sender, EventArgs e)
-		{
-			SearchS.Text = "";
 		}
 	}
 }
