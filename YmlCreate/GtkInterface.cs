@@ -27,6 +27,7 @@ namespace YmlCreate
 		private Label label1;
 
 		private Button Btn_Search;
+		private Button Btn_Create;
 
 		private VBox vbox2;
 
@@ -185,8 +186,14 @@ namespace YmlCreate
 			Btn_Search.Name = "Btn_Search";
 			Btn_Search.UseUnderline = true;
 			Btn_Search.Label = "Очистить поиск";
+			Btn_Create = new Button();
+			Btn_Create.CanFocus = true;
+			Btn_Create.Name = "Btn_Search";
+			Btn_Create.UseUnderline = true;
+			Btn_Create.Label = "Создать Yaml";
 			hbox3.Add(Btn_Search);
-			hbox3.SetChildPacking(Btn_Search, false, false, 0, PackType.Start);
+			hbox3.PackStart(Btn_Search, false, false, 0);
+			hbox3.PackStart(Btn_Create, false, false, 0);
 			vbox4.Add(hbox3);
 			vbox4.SetChildPacking(hbox3, false, false, 0, PackType.Start);
 			vbox2.Add(vbox4);
@@ -222,12 +229,12 @@ namespace YmlCreate
 				ListStore temp = new ListStore(typeof(int), typeof(string), typeof(Pixbuf));
 				temp.SetSortColumnId(0, SortType.Ascending);
 				IV_AllServices.FreezeChildNotify();
-				IV_AllServices.Model = temp;
+				IV_AllServices.Model = null;
 				foreach (object[] t in AllServices)
 				{
 					string Name = (string)t[1];
 					Pixbuf Img = (Pixbuf)t[2];
-					if (Name.Contains(SearchS.Text))
+					if (Name.StartsWith(SearchS.Text))
 					{
 						if (Img != null)
 							temp.AppendValues(c++, Name, Img);
@@ -235,6 +242,7 @@ namespace YmlCreate
 							temp.AppendValues(c++, Name, DefaultServiceIcon);
 					}
 				}
+				IV_AllServices.Model = temp;
 				IV_AllServices.ThawChildNotify();
 			}
 			else
