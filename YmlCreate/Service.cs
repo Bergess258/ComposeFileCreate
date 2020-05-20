@@ -24,8 +24,28 @@ namespace YmlCreate
     {
         public static List<Service> services = new List<Service>();
     }
-    public class AllServiceOptions
+    static class AllServiceOptions
     {
-        public static 
+        public static readonly List<Options> GlobalOPtions = new List<Options>() {
+            {new Options("args",ValueType.OneOrMore) },
+            {new Options("build",ValueType.OneOrEmpty, new List<Options>()
+                {
+                    GlobalOPtions[0],
+                    {new Options("context",ValueType.One)},
+                    {new Options("dockerfile",ValueType.One)},
+                    {new Options("cache_from",ValueType.One)},
+                    {new Options("labels",ValueType.OneOrMore)},
+                    {new Options("network",ValueType.One)},
+                    {new Options("shm_size",ValueType.One)},
+                    {new Options("target",ValueType.One)}
+                }
+                ) },
+            {new Options("cap_add",ValueType.List)},
+            {new Options("cap_drop",ValueType.List)},
+            {new Options("cgroup_parent",ValueType.One)},
+            {new Options("command",ValueType.One)},
+
+        };
+        //BUILD If you specify image as well as build, then Compose names the built image with the webapp and optional tag specified in image
     }
 }
