@@ -26,6 +26,7 @@ namespace YmlCreate
     }
     static class AllServiceOptions
     {
+        //Definitions for options used more than once
         static readonly Options cpus = new Options("cpus", ValueType.One);
         static readonly Options memory = new Options("memory", ValueType.One);
         static readonly Options delay = new Options("delay", ValueType.Seconds);
@@ -35,6 +36,14 @@ namespace YmlCreate
         static readonly Options env = new Options("env", ValueType.One);
         static readonly Options env_regex = new Options("env-regex", ValueType.One);
         static readonly Options tag = new Options("tag", ValueType.One);
+        static readonly Options external = new Options("external", ValueType.Bool);
+        static readonly Options name = new Options("name", ValueType.One);
+        static readonly Options file = new Options("file", ValueType.One);
+        static readonly Options driver_opts = new Options("driver_opts", ValueType.ListWithValue);
+        static readonly Options driver = new Options("driver", ValueType.One);//for networks options
+        static readonly Options externalName = new Options("external", ValueType.Empty,new List<Options>() { new Options("Name",ValueType.One)});
+
+        
         static readonly List<Options> ConfigNSecret = new List<Options>()
             {
                 {new Options("source",ValueType.One)},
@@ -52,7 +61,9 @@ namespace YmlCreate
                             new Options("max_failure_ratio",ValueType.Number),
                             new Options("order",ValueType.One)
                         };
-        public static readonly List<Options> GlobalOptions = new List<Options>() {
+
+        //Combined by configuration reference into different lists 
+        static readonly List<Options> GlobalOptions = new List<Options>() {
             {new Options("args",ValueType.List) },
             {new Options("labels",ValueType.ListWithValue)},
             {new Options("build",ValueType.OneOrEmpty, new List<Options>()
@@ -276,20 +287,54 @@ namespace YmlCreate
             {new Options("hostname",ValueType.One)},
             {new Options("ipc",ValueType.One)},
             {new Options("mac_address",ValueType.One)},
-            {new Options("mac_address",ValueType.One)},
             {new Options("shm_size",ValueType.One)},
             {new Options("privileged",ValueType.Bool)},
             {new Options("read_only",ValueType.Bool)},
             {new Options("stdin_open",ValueType.Bool)},
-            {new Options("tty",ValueType.Bool)},
+            {new Options("tty",ValueType.Bool)}
         };
-        public static readonly List<Options> VolumeOptions = new List<Options>() 
+        static readonly List<Options> VolumeOptions = new List<Options>() 
         {
             GlobalOptions[1],
-            {new Options("driver",ValueType.One)},
-            {new Options("name",ValueType.One)},
-            {new Options("external",ValueType.Bool)},
-            {new Options("driver_opts",ValueType.ListWithValue)},
+            driver,
+            name,
+            external,
+            driver_opts
+        };
+        static readonly List<Options> NetworksOptions = new List<Options>()
+        {
+            GlobalOptions[1],
+            driver,
+            {new Options("bridge",ValueType.One)},
+            {new Options("overlay",ValueType.One)},
+            name,
+            external,
+            driver_opts,
+            {new Options("attachable",ValueType.Bool)},
+            {new Options("config",ValueType.List,new List<Options>(){ new Options("subnet",ValueType.One)})},
+            {new Options("internal",ValueType.Bool)}
+        };
+        static readonly List<Options> ConfigsOptions = new List<Options>()
+        {
+            external,
+            file,
+            externalName
+        };
+        static readonly List<Options> SecretsOptions = new List<Options>()
+        {
+            external,
+            file,
+            name
+        };
+
+        //Dictionary for service config
+        public static readonly Dictionary<string, List<Options>> allConfigs = new Dictionary<string, List<Options>>(5) 
+        {
+            {"service",GlobalOptions},
+            {"volume",VolumeOptions},
+            {"networks",NetworksOptions},
+            {"configs",ConfigsOptions},
+            {"secrets",SecretsOptions}
         };
         //BUILD If you specify image as well as build, then Compose names the built image with the webapp and optional tag specified in image
         //MODE REPLICATED Default //If the service is replicated (which is the default), specify the number of containers that should be running at any given time.
