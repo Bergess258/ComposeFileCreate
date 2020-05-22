@@ -27,6 +27,8 @@ namespace YmlCreate
     static class AllServiceOptions
     {
         //Definitions for options used more than once
+        static readonly Options args = new Options("args", ValueType.List);
+        static readonly Options labels = new Options("labels", ValueType.ListWithValue);
         static readonly Options cpus = new Options("cpus", ValueType.One);
         static readonly Options memory = new Options("memory", ValueType.One);
         static readonly Options delay = new Options("delay", ValueType.Seconds);
@@ -64,15 +66,15 @@ namespace YmlCreate
 
         //Combined by configuration reference into different lists 
         static readonly List<Options> GlobalOptions = new List<Options>() {
-            {new Options("args",ValueType.List) },
-            {new Options("labels",ValueType.ListWithValue)},
+            args,
+            labels,
             {new Options("build",ValueType.OneOrEmpty, new List<Options>()
                 {
-                    GlobalOptions[0],
+                    args,
                     {new Options("context",ValueType.One)},
                     {new Options("dockerfile",ValueType.One)},
                     {new Options("cache_from",ValueType.One)},
-                    GlobalOptions[1],
+                    labels,
                     {new Options("network",ValueType.One)},
                     {new Options("shm_size",ValueType.One)},
                     {new Options("target",ValueType.One)}
@@ -90,7 +92,7 @@ namespace YmlCreate
             {new Options("deploy",ValueType.Empty, new List<Options>()
                 {
                     {new Options("endpoint_mode",ValueType.One)},
-                    GlobalOptions[1],
+                    labels,
                     {new Options("mode",ValueType.One)},
                     {new Options("placement",ValueType.Empty)},
                     {new Options("replicas",ValueType.Number)},

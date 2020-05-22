@@ -196,6 +196,7 @@ namespace YmlCreate
 			ShowAll();
 			DeleteEvent += new DeleteEventHandler(OnDeleteEvent);
 			IV_AllServices.ItemActivated += new ItemActivatedHandler(OnIV_AllServicesItemActivated);
+			IV_SelectedServices.ItemActivated += new ItemActivatedHandler(OnIV_SelectedServicesItemActivated);
 		}
 
 		private static void LoadAllServices()
@@ -273,8 +274,8 @@ namespace YmlCreate
 		protected void OnIV_SelectedServicesItemActivated(object o, ItemActivatedArgs a)
 		{
 			TreeIter iter;
-			IV_AllServices.Model.GetIter(out iter, a.Path);
-
+			IV_SelectedServices.Model.GetIter(out iter, a.Path);
+			new OptionsWindow((string)IV_SelectedServices.Model.GetValue(iter, 1), (Dictionary<string, List<Options>>)IV_SelectedServices.Model.GetValue(iter, 3));
 		}
 	}
 }
