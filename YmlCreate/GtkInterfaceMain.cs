@@ -89,9 +89,12 @@ namespace YmlCreate
 			GtkScrolledWindow2.ShadowType = ((ShadowType)(1));
 
 			//Selected Services StoreList of string and Image
-			SelectedServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf),typeof(Dictionary<string, List<Options>>));
+			SelectedServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf),typeof(List<Options>));
 			Pixbuf OwnService = new Pixbuf(Resources.IconOwnService);
-			SelectedServices.AppendValues(0,"Свой сервис", OwnService,new Dictionary<string, List<Options>>());
+			List<Options> temp = new List<Options>();
+			foreach (Options t in AllServiceOptions.allConfigs)
+				temp.Add(t);
+			SelectedServices.AppendValues(0,"Свой сервис", OwnService, temp);
 			SelectedServices.SetSortColumnId(0, SortType.Ascending);
 			// Selected Services IconViewSettings
 			IV_SelectedServices = new IconView(SelectedServices);
@@ -265,7 +268,10 @@ namespace YmlCreate
 			int c = (int)(IV_AllServices.Model.GetValue(iter, 0));
 			string name = IV_AllServices.Model.GetValue(iter, 1).ToString();
 			Pixbuf Img = (Pixbuf)(IV_AllServices.Model.GetValue(iter, 2));
-			SelectedServices.AppendValues(c,name,Img,new Dictionary<string, List<Options>>());
+			List<Options> temp = new List<Options>();
+			foreach (Options t in AllServiceOptions.allConfigs)
+				temp.Add(t);
+			SelectedServices.AppendValues(c,name,Img,temp);
 			IV_AllServices.ThawChildNotify();
 			AllServices.Remove(ref iter);
 			OnSearchSChanged(new object(),new EventArgs());
@@ -275,7 +281,7 @@ namespace YmlCreate
 		{
 			TreeIter iter;
 			IV_SelectedServices.Model.GetIter(out iter, a.Path);
-			new OptionsWindow((string)IV_SelectedServices.Model.GetValue(iter, 1), (Dictionary<string, List<Options>>)IV_SelectedServices.Model.GetValue(iter, 3));
+			new OptionsWindow((string)(IV_SelectedServices.Model.GetValue(iter, 1)), (List<Options>)(IV_SelectedServices.Model.GetValue(iter, 3)));
 		}
 	}
 }

@@ -38,5 +38,16 @@ namespace YmlCreate
             Name = name;
             ValueType = valueType;
         }
+        public Options(Options t)
+        {
+            Name = t.Name;
+            ValueType = t.ValueType;
+            if (t.childs != null)
+            {
+                childs = new List<Options>();
+                foreach (Options temp in t.childs)
+                    childs.Add(temp);
+            }
+        }
     }
 }

@@ -65,7 +65,7 @@ namespace YmlCreate
                         };
 
         //Combined by configuration reference into different lists 
-        static readonly List<Options> GlobalOptions = new List<Options>() {
+        static readonly Options GlobalOptions = new Options("service", ValueType.Empty, new List<Options>() {
             args,
             labels,
             {new Options("build",ValueType.OneOrEmpty, new List<Options>()
@@ -97,7 +97,7 @@ namespace YmlCreate
                     {new Options("placement",ValueType.Empty)},
                     {new Options("replicas",ValueType.Number)},
                     {new Options("max_replicas_per_node",ValueType.Number)},
-                    {new Options("resources",ValueType.Empty, 
+                    {new Options("resources",ValueType.Empty,
                         new List<Options>()
                         {
                             new Options("limits",ValueType.Empty, new List<Options>(){cpus,memory }),
@@ -294,18 +294,17 @@ namespace YmlCreate
             {new Options("read_only",ValueType.Bool)},
             {new Options("stdin_open",ValueType.Bool)},
             {new Options("tty",ValueType.Bool)}
-        };
-        static readonly List<Options> VolumeOptions = new List<Options>() 
-        {
-            GlobalOptions[1],
+        });
+        static readonly Options VolumeOptions = new Options("volume", ValueType.Empty, new List<Options>(){
+            labels,
             driver,
             name,
             external,
             driver_opts
-        };
-        static readonly List<Options> NetworksOptions = new List<Options>()
+        });
+        static readonly Options NetworksOptions = new Options("networks", ValueType.Empty, new List<Options>()
         {
-            GlobalOptions[1],
+            labels,
             driver,
             {new Options("bridge",ValueType.One)},
             {new Options("overlay",ValueType.One)},
@@ -315,28 +314,28 @@ namespace YmlCreate
             {new Options("attachable",ValueType.Bool)},
             {new Options("config",ValueType.List,new List<Options>(){ new Options("subnet",ValueType.One)})},
             {new Options("internal",ValueType.Bool)}
-        };
-        static readonly List<Options> ConfigsOptions = new List<Options>()
+        });
+        static readonly Options ConfigsOptions = new Options("configs", ValueType.Empty, new List<Options>()
         {
             external,
             file,
             externalName
-        };
-        static readonly List<Options> SecretsOptions = new List<Options>()
+        });
+        static readonly Options SecretsOptions = new Options("secrets", ValueType.Empty, new List<Options>()
         {
             external,
             file,
             name
-        };
+        });
 
         //Dictionary for service config
-        public static readonly Dictionary<string, List<Options>> allConfigs = new Dictionary<string, List<Options>>(5) 
+        public static readonly List<Options> allConfigs = new List<Options>(5) 
         {
-            {"service",GlobalOptions},
-            {"volume",VolumeOptions},
-            {"networks",NetworksOptions},
-            {"configs",ConfigsOptions},
-            {"secrets",SecretsOptions}
+            GlobalOptions,
+            VolumeOptions,
+            NetworksOptions,
+            ConfigsOptions,
+            SecretsOptions
         };
         //BUILD If you specify image as well as build, then Compose names the built image with the webapp and optional tag specified in image
         //MODE REPLICATED Default //If the service is replicated (which is the default), specify the number of containers that should be running at any given time.
