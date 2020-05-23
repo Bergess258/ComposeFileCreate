@@ -245,10 +245,11 @@ namespace YmlCreate
 				int length = AllServicesList.Count;
 				for (int i = 0; i < length; i++)
 				{
-					if (ServicesImg[i] != null)
-						temp.AppendValues(c++, AllServicesList[i].Name, ServicesImg[i]);
-					else
-						temp.AppendValues(c++, AllServicesList[i].Name, DefaultServiceIcon);
+					if (uwu.search(AllServicesList[i].Name.ToCharArray()))
+						if (ServicesImg[i] != null)
+							temp.AppendValues(c++, AllServicesList[i].Name, ServicesImg[i]);
+						else
+							temp.AppendValues(c++, AllServicesList[i].Name, DefaultServiceIcon);
 				}
 				IV_AllServices.Model = temp;
 				IV_AllServices.ThawChildNotify();
