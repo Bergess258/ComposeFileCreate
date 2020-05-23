@@ -13,7 +13,7 @@ namespace YmlCreate
         List,// a lot with -
         ListWithValue,
         Number,
-        Seconds,
+        Time,
         Special, //Some values with different ends like ns,ms,s,m and other
         ComboBox,//Some const values choose from
         Bool
@@ -22,6 +22,7 @@ namespace YmlCreate
     {
         public string Name { get; set; }
         public string Value { get; set; }
+        public object DefaultValue { get; set; }
         public string HelpInfo { get; set; } //SomeUseful ingo 
         public string AdditionalInfo { get; set; }//Like Long or Short
         public ValueType ValueType { get; set; }

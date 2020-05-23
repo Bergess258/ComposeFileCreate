@@ -31,7 +31,7 @@ namespace YmlCreate
         static readonly Options labels = new Options("labels", ValueType.ListWithValue);
         static readonly Options cpus = new Options("cpus", ValueType.One);
         static readonly Options memory = new Options("memory", ValueType.One);
-        static readonly Options delay = new Options("delay", ValueType.Seconds);
+        static readonly Options delay = new Options("delay", ValueType.Time);
         static readonly Options max_size = new Options("max-size", ValueType.One);
         static readonly Options max_file = new Options("max-file", ValueType.Number);
         static readonly Options compress = new Options("compress", ValueType.Bool);
@@ -110,7 +110,7 @@ namespace YmlCreate
                             new Options("condition",ValueType.One),
                             delay,
                             new Options("max_attempts",ValueType.Number),
-                            new Options("window",ValueType.Seconds)
+                            new Options("window",ValueType.Time)
                         }
                         )},
                     {new Options("rollback_config",ValueType.Empty,RollbackNUpdateConfig)},
@@ -130,8 +130,8 @@ namespace YmlCreate
                 {
                     {new Options("test",ValueType.Special)},
                     {new Options("interval",ValueType.Special)},
-                    {new Options("timeout",ValueType.Seconds)},
-                    {new Options("start_period",ValueType.Seconds)},
+                    {new Options("timeout",ValueType.Time)},
+                    {new Options("start_period",ValueType.Time)},
                     {new Options("retries",ValueType.Number)}
                 }
             ) },
@@ -181,7 +181,7 @@ namespace YmlCreate
                             {new Options("fluentd-address",ValueType.One)},
                             {new Options("fluentd-async-connect",ValueType.Bool)},
                             {new Options("fluentd-buffer-limit",ValueType.One)}, //10KB as example
-                            {new Options("fluentd-retry-wait",ValueType.Seconds)},
+                            {new Options("fluentd-retry-wait",ValueType.Time)},
                             {new Options("fluentd-max-retries",ValueType.Number)},
                             {new Options("fluentd-sub-second-precision",ValueType.Bool)}
                         }),
