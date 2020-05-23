@@ -20,6 +20,7 @@ namespace YmlCreate
 		const int Col_Pixbuf = 2;
 		const int IV_ItemWidth = 70;
 		static Pixbuf DefaultServiceIcon = new Pixbuf(Resources.DefultServiceIcon);
+		static Pixbuf OwnService = new Pixbuf(Resources.IconOwnService);
 
 		private HBox hbox1;
 
@@ -49,20 +50,24 @@ namespace YmlCreate
 		private static CancellationTokenSource ts = new CancellationTokenSource();
 		private static CancellationToken ct = ts.Token;
 		private Task T_Search = new Task(Search,ct);
+		private Task Loading = new Task(LoadAllServices);
 
 		private IconView IV_SelectedServices;
 		private ScrolledWindow GtkScrolledWindow2;
 		private ListStore SelectedServices;
 
+		static List<Service> AllServicesList;
+		static Pixbuf[] ServicesImg;
 
 		public MainWindow() : base(Gtk.WindowType.Toplevel)
 		{
+			Loading.Start();
 			Build();
 		}
 
 		protected virtual void Build()
 		{
-			// Widget MainWindow
+			//MainWindow
 			Name = "MainWindow";
 			Title = "Построение yml файла на основе заданных сервисов";
 			WindowPosition = ((WindowPosition)(4));
@@ -90,7 +95,6 @@ namespace YmlCreate
 
 			//Selected Services StoreList of string and Image
 			SelectedServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf),typeof(List<Options>));
-			Pixbuf OwnService = new Pixbuf(Resources.IconOwnService);
 			List<Options> temp = new List<Options>();
 			foreach (Options t in AllServiceOptions.allConfigs)
 				temp.Add(t);
@@ -124,32 +128,6 @@ namespace YmlCreate
 			vbox4.Name = "vbox4";
 			vbox4.Spacing = 1;
 
-			LoadAllServices();
-			//All Services StoreList of their name and Image
-			AllServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf));
-			AllServices.SetSortColumnId(0, SortType.Ascending);
-			int c = 0;
-			//Adding services to store
-			foreach (Service service in Program.AllServices)
-				if (service.Img != null)
-					AllServices.AppendValues(c++,service.Name, new Pixbuf(service.Img, 64, 64));
-				else
-					AllServices.AppendValues(c++,service.Name, DefaultServiceIcon);
-
-			GtkScrolledWindow1 = new ScrolledWindow();
-			GtkScrolledWindow1.Name = "GtkScrolledWindow1";
-			GtkScrolledWindow1.ShadowType = ((ShadowType)(1));
-
-			// All Services IconViewSettings
-			IV_AllServices = new IconView(AllServices);
-			IV_AllServices.CanFocus = true;
-			IV_AllServices.Name = "IV_AllServices";
-			IV_AllServices.ItemWidth = IV_ItemWidth;
-			IV_AllServices.TextColumn = Col_DisplayName;
-			IV_AllServices.PixbufColumn = Col_Pixbuf;
-			GtkScrolledWindow1.Add(IV_AllServices);
-			vbox4.Add(GtkScrolledWindow1);
-			IV_AllServices.GrabFocus();
 			// Container child vbox4.Gtk.Box+BoxChild
 			hbox3 = new HBox();
 			hbox3.Name = "hbox3";
@@ -169,7 +147,6 @@ namespace YmlCreate
 			SearchS.InvisibleChar = '●';
 			SearchS.Changed += new EventHandler(OnSearchSChanged);
 
-			
 			Lbl_Search = new Label();
 			Lbl_Search.Name = "Lbl_Search";
 			Lbl_Search.LabelProp = "Строка поиска сервиса";
@@ -181,14 +158,45 @@ namespace YmlCreate
 			Vbox_Search.PackStart(SearchS, false, false, 0);
 			//Just to create empty space after input field
 			Vbox_Search.PackStart(new Separator(Orientation.Horizontal), false, false, 0);
-			hbox3.Add(Vbox_Search);
-			hbox3.SetChildPacking(SearchS, false, false, 0, PackType.Start);
+			hbox3.PackStart(Vbox_Search, false, false, 0);
 			Btn_Create = new Button();
 			Btn_Create.CanFocus = true;
 			Btn_Create.Name = "Btn_Search";
 			Btn_Create.UseUnderline = true;
 			Btn_Create.Label = "Создать Yaml";
 			hbox3.PackStart(Btn_Create, false, false, 0);
+
+			Loading.Wait();
+			//All Services StoreList of their name and Image
+			AllServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf));
+			AllServices.SetSortColumnId(0, SortType.Ascending);
+
+			GtkScrolledWindow1 = new ScrolledWindow();
+			GtkScrolledWindow1.Name = "GtkScrolledWindow1";
+			GtkScrolledWindow1.ShadowType = ((ShadowType)(1));
+
+			//Adding services to store
+			int length = ServicesImg.Length;
+			for (int i = 0; i < length; ++i)
+			{
+				AllServicesList[i].Img = null;
+				if (ServicesImg[i] != null)
+					AllServices.AppendValues(i, AllServicesList[i].Name, ServicesImg[i]);
+				else
+					AllServices.AppendValues(i, AllServicesList[i].Name, DefaultServiceIcon);
+			}
+
+			// All Services IconViewSettings
+			IV_AllServices = new IconView(AllServices);
+			IV_AllServices.CanFocus = true;
+			IV_AllServices.Name = "IV_AllServices";
+			IV_AllServices.ItemWidth = IV_ItemWidth;
+			IV_AllServices.TextColumn = Col_DisplayName;
+			IV_AllServices.PixbufColumn = Col_Pixbuf;
+			GtkScrolledWindow1.Add(IV_AllServices);
+			vbox4.Add(GtkScrolledWindow1);
+			IV_AllServices.GrabFocus();
+			
 			vbox4.Add(hbox3);
 			vbox4.SetChildPacking(hbox3, false, false, 0, PackType.Start);
 			vbox2.Add(vbox4);
@@ -207,8 +215,15 @@ namespace YmlCreate
 			//Deserialization of all services
 			IFormatter formatter = new BinaryFormatter();
 			Stream stream = new FileStream("MyFile.bin", FileMode.Open, FileAccess.Read, FileShare.Read);
-			Program.AllServices = (List<Service>)formatter.Deserialize(stream);
+			AllServicesList = (List<Service>)formatter.Deserialize(stream);
 			stream.Close();
+			int length = AllServicesList.Count;
+			ServicesImg = new Pixbuf[length];
+			for (int i = 0; i < length; i++)
+			{
+				if(AllServicesList[i].Img!=null)
+					ServicesImg[i] = new Pixbuf(AllServicesList[i].Img, 64, 64);
+			}
 		}
 
 		protected void OnDeleteEvent(object sender, DeleteEventArgs a)
@@ -227,17 +242,13 @@ namespace YmlCreate
 				IV_AllServices.FreezeChildNotify();
 				IV_AllServices.Model = null;
 				AWQ uwu = new AWQ(SearchS.Text.ToCharArray());
-				foreach (object[] t in AllServices)
+				int length = AllServicesList.Count;
+				for (int i = 0; i < length; i++)
 				{
-					string Name = (string)t[1];
-					Pixbuf Img = (Pixbuf)t[2];
-					if (uwu.search(Name.ToCharArray()))
-					{
-						if (Img != null)
-							temp.AppendValues(c++, Name, Img);
-						else
-							temp.AppendValues(c++, Name, DefaultServiceIcon);
-					}
+					if (ServicesImg[i] != null)
+						temp.AppendValues(c++, AllServicesList[i].Name, ServicesImg[i]);
+					else
+						temp.AppendValues(c++, AllServicesList[i].Name, DefaultServiceIcon);
 				}
 				IV_AllServices.Model = temp;
 				IV_AllServices.ThawChildNotify();

@@ -6,7 +6,6 @@ namespace YmlCreate
 {
     class Program
     {
-        public static List<Service> AllServices;
         static void Main(string[] args)
         {
 
