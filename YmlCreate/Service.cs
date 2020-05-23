@@ -34,11 +34,10 @@ namespace YmlCreate
         static readonly Options delay = new Options("delay", ValueType.Time);
         static readonly Options max_size = new Options("max-size", ValueType.One);
         static readonly Options max_file = new Options("max-file", ValueType.Number);
-        static readonly Options compress = new Options("compress", ValueType.Bool);
         static readonly Options env = new Options("env", ValueType.One);
         static readonly Options env_regex = new Options("env-regex", ValueType.One);
         static readonly Options tag = new Options("tag", ValueType.One);
-        static readonly Options external = new Options("external", ValueType.Bool);
+        static readonly Options external = new Options("external", ValueType.Bool) { DefaultValue=false};
         static readonly Options name = new Options("name", ValueType.One);
         static readonly Options file = new Options("file", ValueType.One);
         static readonly Options driver_opts = new Options("driver_opts", ValueType.ListWithValue);
@@ -136,24 +135,24 @@ namespace YmlCreate
                 }
             ) },
             {new Options("image",ValueType.One)},
-            {new Options("isolation",ValueType.ComboBox)},
+            {new Options("isolation",ValueType.ComboBox){ DefaultValue = "default", ComboBoxValues = new string[]{ "default", "process", "hyperv" } }},
             {new Options("links",ValueType.List)},
             {new Options("logging",ValueType.Empty,new List<Options>()
             {
-                {new Options("driver",ValueType.ComboBox)},
+                {new Options("driver",ValueType.ComboBox){ DefaultValue = "json-file", ComboBoxValues = new string[]{ "json-file", "none", "local", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "etwlogs", "gcplogs", "logentries" } }},
                 {new Options("options",ValueType.Special,new List<Options>() //https://docs.docker.com/config/containers/logging/configure/
                     {
                         new Options("local",ValueType.Special,new List<Options>()
                         {
                             max_file,
                             max_size,
-                            compress
+                            new Options("compress", ValueType.Bool) {DefaultValue=true }
                         }),
                         new Options("json-file",ValueType.Special,new List<Options>()
                         {
                             max_file,
                             max_size,
-                            compress,
+                            new Options("compress", ValueType.Bool) { DefaultValue = false },
                             env,
                             env_regex
                         }),
@@ -166,7 +165,7 @@ namespace YmlCreate
                             {new Options("syslog-tls-cert",ValueType.One)},
                             {new Options("syslog-tls-key",ValueType.One)},
                             {new Options("syslog-format",ValueType.One)},
-                            {new Options("syslog-tls-skip-verify",ValueType.Bool)}
+                            {new Options("syslog-tls-skip-verify",ValueType.Bool){ DefaultValue=false }}
                         }),
                         new Options("gelf",ValueType.Special,new List<Options>(){
                             tag,env,env_regex,
@@ -179,18 +178,18 @@ namespace YmlCreate
                         new Options("fluentd",ValueType.Special,new List<Options>(){
                             tag,env,env_regex,
                             {new Options("fluentd-address",ValueType.One)},
-                            {new Options("fluentd-async-connect",ValueType.Bool)},
+                            {new Options("fluentd-async-connect",ValueType.Bool){ DefaultValue=false }},
                             {new Options("fluentd-buffer-limit",ValueType.One)}, //10KB as example
                             {new Options("fluentd-retry-wait",ValueType.Time)},
                             {new Options("fluentd-max-retries",ValueType.Number)},
-                            {new Options("fluentd-sub-second-precision",ValueType.Bool)}
+                            {new Options("fluentd-sub-second-precision",ValueType.Bool){ DefaultValue=false }}
                         }),
                         new Options("awslogs",ValueType.Special,new List<Options>(){
                             tag,env,env_regex,
                             {new Options("awslogs-region",ValueType.One)},
                             {new Options("awslogs-endpoint",ValueType.One)},
                             {new Options("awslogs-group",ValueType.One)},
-                            {new Options("awslogs-create-group",ValueType.Bool)},
+                            {new Options("awslogs-create-group",ValueType.Bool){ DefaultValue=false }},
                             {new Options("awslogs-datetime-format",ValueType.One)},
                             {new Options("awslogs-multiline-pattern",ValueType.One)}
                         }),
@@ -202,10 +201,10 @@ namespace YmlCreate
                             {new Options("splunk-sourcetype",ValueType.One)},
                             {new Options("splunk-index",ValueType.One)},
                             {new Options("splunk-capath",ValueType.One)},
-                            {new Options("splunk-insecureskipverify",ValueType.Bool)},
-                            {new Options("splunk-format",ValueType.ComboBox)},
-                            {new Options("splunk-verify-connection",ValueType.Bool)},
-                            {new Options("splunk-gzip",ValueType.Bool)},
+                            {new Options("splunk-insecureskipverify",ValueType.Bool){ DefaultValue=false }},
+                            {new Options("splunk-format",ValueType.ComboBox){ DefaultValue = "inline", ComboBoxValues = new string[]{ "inline", "json", "raw"}}},
+                            {new Options("splunk-verify-connection",ValueType.Bool){ DefaultValue=true }},
+                            {new Options("splunk-gzip",ValueType.Bool){ DefaultValue=false }},
                             {new Options("splunk-gzip-level	",ValueType.Number)}
                         }),
                         new Options("etwlogs",ValueType.Special,new List<Options>(){
@@ -213,21 +212,20 @@ namespace YmlCreate
                             {new Options("image_name",ValueType.One)},
                             {new Options("container_id",ValueType.One)},
                             {new Options("image_id",ValueType.One)},
-                            {new Options("source",ValueType.ComboBox)},
+                            {new Options("source",ValueType.ComboBox){ DefaultValue = "stdout", ComboBoxValues = new string[]{ "stdout", "stderr"}}},
                             {new Options("log",ValueType.One)}
                         }),
                         new Options("gcplogs",ValueType.Special,new List<Options>(){
                             env,env_regex,
                             {new Options("gcp-project",ValueType.One)},
-                            {new Options("gcp-log-cmd",ValueType.Bool)},
+                            {new Options("gcp-log-cmd",ValueType.Bool){ DefaultValue=false }},
                             {new Options("gcp-meta-zone",ValueType.One)},
                             {new Options("gcp-meta-name",ValueType.One)},
-                            {new Options("gcp-meta-id",ValueType.ComboBox)}
+                            {new Options("gcp-meta-id",ValueType.One)}
                         }),
                         new Options("logentries",ValueType.Special,new List<Options>(){
-                            env,env_regex,
                             {new Options("logentries-token",ValueType.One)},
-                            {new Options("line-only",ValueType.Bool)}
+                            {new Options("line-only",ValueType.Bool){ DefaultValue=false }}
                         }),
                     }
                 )},
@@ -241,10 +239,10 @@ namespace YmlCreate
             {
                 {new Options("target",ValueType.One)},
                 {new Options("published",ValueType.One)},
-                {new Options("protocol",ValueType.ComboBox)},
-                {new Options("mode",ValueType.ComboBox)}
+                {new Options("protocol",ValueType.ComboBox){ DefaultValue = "tcp", ComboBoxValues = new string[]{ "tcp", "udp"}}},
+                {new Options("mode",ValueType.ComboBox){ DefaultValue = "host", ComboBoxValues = new string[]{ "host", "ingress"}}}
             }){ AdditionalInfo="Long"} },
-            {new Options("restart",ValueType.ComboBox)},
+            {new Options("restart",ValueType.ComboBox){ DefaultValue = "no", ComboBoxValues = new string[]{ "no", "always","on-failure","unless-stopped"}}},
             {new Options("secrets",ValueType.List){ AdditionalInfo="Short"}},
             {new Options("secrets",ValueType.Empty,ConfigNSecret){ AdditionalInfo="Long"} },
             {new Options("security_opt",ValueType.List)},
@@ -268,18 +266,18 @@ namespace YmlCreate
                 {new Options("type",ValueType.ComboBox){ComboBoxValues = new string[]{"volume","bind","tmpfs","npipe" } } },
                 {new Options("source",ValueType.One)},
                 {new Options("target",ValueType.One)},
-                {new Options("read_only",ValueType.Bool)},
+                {new Options("read_only",ValueType.Bool){ DefaultValue=false }},
                 {new Options("bind",ValueType.Empty,new List<Options>()
                 {
                     new Options("propagation",ValueType.ComboBox){ComboBoxValues=new string[]{ "rprivate", "private", "rshared", "shared", "rslave", "slave"} }
                 })},
                 {new Options("volume",ValueType.Empty,new List<Options>()
                 {
-                    new Options("nocopy",ValueType.Bool)
+                    new Options("nocopy",ValueType.Bool){ DefaultValue=false }
                 })},
                 {new Options("tmpfs",ValueType.Empty,new List<Options>()
                 {
-                    new Options("size",ValueType.Bool){ HelpInfo ="в байтах"}
+                    new Options("size",ValueType.Number){ HelpInfo ="в байтах"}
                 })},
                 {new Options("consistency",ValueType.ComboBox){ComboBoxValues=new string[]{ "consistent", "delegated", "cached"} }}
             }){ AdditionalInfo="Long"} },
@@ -290,10 +288,10 @@ namespace YmlCreate
             {new Options("ipc",ValueType.One)},
             {new Options("mac_address",ValueType.One)},
             {new Options("shm_size",ValueType.One)},
-            {new Options("privileged",ValueType.Bool)},
-            {new Options("read_only",ValueType.Bool)},
-            {new Options("stdin_open",ValueType.Bool)},
-            {new Options("tty",ValueType.Bool)}
+            {new Options("privileged",ValueType.Bool){ DefaultValue=false }},
+            {new Options("read_only",ValueType.Bool){ DefaultValue=false }},
+            {new Options("stdin_open",ValueType.Bool){ DefaultValue=false }},
+            {new Options("tty",ValueType.Bool){ DefaultValue=false }}
         });
         static readonly Options VolumeOptions = new Options("volume", ValueType.Empty, new List<Options>(){
             labels,

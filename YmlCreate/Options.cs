@@ -23,11 +23,11 @@ namespace YmlCreate
         public string Name { get; set; }
         public string Value { get; set; }
         public object DefaultValue { get; set; }
-        public string HelpInfo { get; set; } //SomeUseful ingo 
+        public string HelpInfo { get; set; } //SomeUseful info 
         public string AdditionalInfo { get; set; }//Like Long or Short
         public ValueType ValueType { get; set; }
         public List<Options> childs { get; set; }
-        public string[] ComboBoxValues { get; set; }
+        public string[] ComboBoxValues { get; set; } // Uses also for list values
         public Options(string name,ValueType valueType, List<Options> childOptions)
         {
             Name = name;

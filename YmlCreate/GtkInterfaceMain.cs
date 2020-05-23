@@ -281,7 +281,8 @@ namespace YmlCreate
 		{
 			TreeIter iter;
 			IV_SelectedServices.Model.GetIter(out iter, a.Path);
-			new OptionsWindow((string)(IV_SelectedServices.Model.GetValue(iter, 1)), (List<Options>)(IV_SelectedServices.Model.GetValue(iter, 3)));
+			List<Options> te = (List<Options>)(IV_SelectedServices.Model.GetValue(iter, 3));
+			new OptionsWindow((string)(IV_SelectedServices.Model.GetValue(iter, 1)), te);
 		}
 	}
 }
