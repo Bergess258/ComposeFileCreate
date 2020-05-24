@@ -308,7 +308,20 @@ namespace YmlCreate
 
 		protected void OnCreateYmlPressed(object sender, EventArgs e)
 		{
-			ShowSaveDialog();
+			Dictionary<string, List<Options>> Services = new Dictionary<string, List<Options>>();
+			Task task = new Task(()=> 
+			{
+				TreeIter iter;
+				SelectedServices.GetIterFirst(out iter);
+				while (SelectedServices.IterNext(ref iter))
+				{
+					Services.Add((string)SelectedServices.GetValue(iter, 1), (List<Options>)SelectedServices.GetValue(iter, 3));
+				} 
+			});
+			task.Start();
+			string r = ShowSaveDialog();
+			task.Wait();
+			Yaml.Create(r,Services);
 		}
 
 		public string ShowSaveDialog()
@@ -316,6 +329,13 @@ namespace YmlCreate
 			string result = null;
 			Gtk.FileChooserDialog saveDialog = new Gtk.FileChooserDialog("Save as", null, Gtk.FileChooserAction.Save, "Cancel", Gtk.ResponseType.Cancel, "Save", Gtk.ResponseType.Accept);
 			saveDialog.SetCurrentFolder(Environment.CurrentDirectory+@"\Yaml");
+			FileFilter filter = new FileFilter();
+			filter.Name = "doc/pdf";
+			filter.AddPattern("*.yml");
+			filter.AddPattern("*.yaml");
+			saveDialog.Filter = filter;
+
+
 			if (saveDialog.Run() == (int)Gtk.ResponseType.Accept)
 			{
 				result = saveDialog.Filename;

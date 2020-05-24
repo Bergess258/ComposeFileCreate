@@ -197,11 +197,10 @@ namespace YmlCreate
         //So there ifs for each type of values
         void fillStore(TreeIter it,Options t)
         {
-            if(t.ValueType == ValueType.One|| t.ValueType == ValueType.Time || t.ValueType == ValueType.OneOrEmpty)
-                if (t.DefaultValue == null)
-                    it = Store.AppendValues(it, t, null,"");
-                else
-                    it = Store.AppendValues(it, t, null, (string)t.DefaultValue);
+            if(t.ValueType == ValueType.One || t.ValueType == ValueType.OneOrEmpty)
+            {
+                    it = Store.AppendValues(it, t, null, "");
+            }
             else
                 if(t.ValueType == ValueType.Bool)
                     if(t.DefaultValue==null)
@@ -290,7 +289,7 @@ namespace YmlCreate
         private void RenderEditableText(Gtk.TreeViewColumn column, Gtk.CellRenderer cell, ITreeModel model, Gtk.TreeIter iter)
         {
             Options temp = (Options)model.GetValue(iter, 0);
-            cell.Visible = temp.ValueType == ValueType.One || temp.ValueType == ValueType.Time || temp.ValueType == ValueType.OneOrEmpty;
+            cell.Visible = temp.ValueType == ValueType.One  || temp.ValueType == ValueType.OneOrEmpty;
             if (cell.Visible)
             {
                 if (temp.Value != null)
@@ -399,7 +398,7 @@ namespace YmlCreate
                 if ((string)ListWithValuesStore.GetValue(iter, 0) == "" && another != "")
                 {
                     ListWithValuesStore.AppendValues("", "");
-                    Selected.ComboBoxValues.Add(args.NewText + ":" + another);
+                    Selected.ComboBoxValues.Add(args.NewText + ": " + another);
                 }
             }
             else
@@ -421,7 +420,7 @@ namespace YmlCreate
                 if ((string)ListWithValuesStore.GetValue(iter, 1) == "" && another != "")
                 {
                     ListWithValuesStore.AppendValues("", "");
-                    Selected.ComboBoxValues.Add(another + ":" + args.NewText);
+                    Selected.ComboBoxValues.Add(another + ": " + args.NewText);
                 }
             }
             else

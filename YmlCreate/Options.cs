@@ -13,7 +13,7 @@ namespace YmlCreate
         List,// a lot with -
         ListWithValue,
         Number,
-        Time,
+        //Time,
         Special, //Some values with different ends like ns,ms,s,m and other
         ComboBox,//Some const values choose from
         Bool
