@@ -1,4 +1,4 @@
-Docker-compose file creator(not fully done()
+Docker-compose file creator(not fully done( )
 =============================
 Программа для созданыя файла конфигурации системы yml,yaml. 
 Используется версия 3.8
