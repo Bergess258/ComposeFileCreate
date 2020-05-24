@@ -65,8 +65,8 @@ namespace YmlCreate
 
         //Combined by configuration reference into different lists 
         static readonly Options GlobalOptions = new Options("service", ValueType.Empty, new List<Options>() {
-            args,
-            labels,
+            {new Options("image",ValueType.One)},
+            {new Options("restart",ValueType.ComboBox){ DefaultValue = "no", ComboBoxValues = new List<string>(){ "no", "always","on-failure","unless-stopped"}}},
             {new Options("build",ValueType.OneOrEmpty, new List<Options>()
                 {
                     args,
@@ -79,14 +79,7 @@ namespace YmlCreate
                     {new Options("target",ValueType.One)}
                 }
             ) },
-            {new Options("cap_add",ValueType.List)},
-            {new Options("cap_drop",ValueType.List)},
-            {new Options("cgroup_parent",ValueType.One)},
-            {new Options("command",ValueType.One)},
-            {new Options("configs",ValueType.List){ AdditionalInfo="Short"} },
-            {new Options("configs",ValueType.List,ConfigNSecret){ AdditionalInfo="Long"} },
-            {new Options("container_name",ValueType.One)},
-            {new Options("container_name",ValueType.One)},
+            {new Options("environment",ValueType.List)},
             {new Options("depends_on",ValueType.List)},
             {new Options("deploy",ValueType.Empty, new List<Options>()
                 {
@@ -116,31 +109,47 @@ namespace YmlCreate
                     {new Options("update_config",ValueType.Empty,RollbackNUpdateConfig)}
                 }
             ) },
+            {new Options("networks",ValueType.List)}, //Should ckeck all current networks //**info for me**
+            {new Options("volumes",ValueType.List){ AdditionalInfo="Short"} },
+            args,
+            labels,
+            {new Options("cap_add",ValueType.List)},
+            {new Options("cap_drop",ValueType.List)},
+            {new Options("cgroup_parent",ValueType.One)},
+            {new Options("command",ValueType.One)},
+            {new Options("configs",ValueType.List){ AdditionalInfo="Short"} },
+            {new Options("configs",ValueType.List,ConfigNSecret){ AdditionalInfo="Long"} },
+            {new Options("container_name",ValueType.One)},
+            {new Options("credential_spec",ValueType.Empty,new List<Options>()
+            {
+                file,
+                {new Options("registry",ValueType.One)},
+                {new Options("config",ValueType.One)},
+            })},
             {new Options("devices",ValueType.List)},
             {new Options("dns",ValueType.OneOrList)},
             {new Options("dns_search",ValueType.OneOrList)},
             {new Options("entrypoint",ValueType.One)},
             {new Options("env_file",ValueType.OneOrList)},
-            {new Options("environment",ValueType.List)},
             {new Options("expose",ValueType.List)},
             {new Options("external_links",ValueType.List)},
             {new Options("extra_hosts",ValueType.List)},
             {new Options("healthcheck",ValueType.Empty, new List<Options>()
                 {
-                    {new Options("test",ValueType.Special)},
-                    {new Options("interval",ValueType.Special)},
+                    {new Options("test",ValueType.One){HelpInfo="Значение должно быть следующего вида учитывая  [\"CMD(может заменяться на NONE(тоже самое disable:true) и CMD-SHELL)\", \"curl\", \"-f\", \"http://localhost\"] или curl -f https://localhost || exit 1" } },
+                    {new Options("interval",ValueType.Time)},
                     {new Options("timeout",ValueType.Time)},
                     {new Options("start_period",ValueType.Time)},
-                    {new Options("retries",ValueType.Number)}
+                    {new Options("retries",ValueType.Number)},
+                    {new Options("disable",ValueType.Bool){ DefaultValue = false} }
                 }
             ) },
-            {new Options("image",ValueType.One)},
-            {new Options("isolation",ValueType.ComboBox){ DefaultValue = "default", ComboBoxValues = new string[]{ "default", "process", "hyperv" } }},
+            {new Options("isolation",ValueType.ComboBox){ DefaultValue = "default", ComboBoxValues = new List<string>(){ "default", "process", "hyperv" } }},
             {new Options("links",ValueType.List)},
             {new Options("logging",ValueType.Empty,new List<Options>()
             {
-                {new Options("driver",ValueType.ComboBox){ DefaultValue = "json-file", ComboBoxValues = new string[]{ "json-file", "none", "local", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "etwlogs", "gcplogs", "logentries" } }},
-                {new Options("options",ValueType.Special,new List<Options>() //https://docs.docker.com/config/containers/logging/configure/
+                {new Options("driver",ValueType.ComboBox){ DefaultValue = "json-file", ComboBoxValues = new List<string>(){ "json-file", "none", "local", "syslog", "journald", "gelf", "fluentd", "awslogs", "splunk", "etwlogs", "gcplogs", "logentries" } }},
+                {new Options("options",ValueType.Empty,new List<Options>() //https://docs.docker.com/config/containers/logging/configure/
                     {
                         new Options("local",ValueType.Special,new List<Options>()
                         {
@@ -202,7 +211,7 @@ namespace YmlCreate
                             {new Options("splunk-index",ValueType.One)},
                             {new Options("splunk-capath",ValueType.One)},
                             {new Options("splunk-insecureskipverify",ValueType.Bool){ DefaultValue=false }},
-                            {new Options("splunk-format",ValueType.ComboBox){ DefaultValue = "inline", ComboBoxValues = new string[]{ "inline", "json", "raw"}}},
+                            {new Options("splunk-format",ValueType.ComboBox){ DefaultValue = "inline", ComboBoxValues = new List<string>(){ "inline", "json", "raw"}}},
                             {new Options("splunk-verify-connection",ValueType.Bool){ DefaultValue=true }},
                             {new Options("splunk-gzip",ValueType.Bool){ DefaultValue=false }},
                             {new Options("splunk-gzip-level	",ValueType.Number)}
@@ -212,7 +221,7 @@ namespace YmlCreate
                             {new Options("image_name",ValueType.One)},
                             {new Options("container_id",ValueType.One)},
                             {new Options("image_id",ValueType.One)},
-                            {new Options("source",ValueType.ComboBox){ DefaultValue = "stdout", ComboBoxValues = new string[]{ "stdout", "stderr"}}},
+                            {new Options("source",ValueType.ComboBox){ DefaultValue = "stdout", ComboBoxValues = new List<string>(){ "stdout", "stderr"}}},
                             {new Options("log",ValueType.One)}
                         }),
                         new Options("gcplogs",ValueType.Special,new List<Options>(){
@@ -231,18 +240,16 @@ namespace YmlCreate
                 )},
             })},
             {new Options("network_mode",ValueType.One)},
-            {new Options("networks",ValueType.List)}, //Should ckeck all current networks //**info for me**
-            {new Options("networks",ValueType.Special)}, //For aliases and IPV4_ADDRESS, IPV6_ADDRESS
+            //{new Options("networks",ValueType.Special)}, //For aliases and IPV4_ADDRESS, IPV6_ADDRESS
             {new Options("pid",ValueType.One)},
             {new Options("ports",ValueType.List){ AdditionalInfo="Short"} },
             {new Options("ports",ValueType.Empty,new List<Options>()
             {
                 {new Options("target",ValueType.One)},
                 {new Options("published",ValueType.One)},
-                {new Options("protocol",ValueType.ComboBox){ DefaultValue = "tcp", ComboBoxValues = new string[]{ "tcp", "udp"}}},
-                {new Options("mode",ValueType.ComboBox){ DefaultValue = "host", ComboBoxValues = new string[]{ "host", "ingress"}}}
+                {new Options("protocol",ValueType.ComboBox){ DefaultValue = "tcp", ComboBoxValues = new List<string>(){ "tcp", "udp"}}},
+                {new Options("mode",ValueType.ComboBox){ DefaultValue = "host", ComboBoxValues = new List<string>(){ "host", "ingress"}}}
             }){ AdditionalInfo="Long"} },
-            {new Options("restart",ValueType.ComboBox){ DefaultValue = "no", ComboBoxValues = new string[]{ "no", "always","on-failure","unless-stopped"}}},
             {new Options("secrets",ValueType.List){ AdditionalInfo="Short"}},
             {new Options("secrets",ValueType.Empty,ConfigNSecret){ AdditionalInfo="Long"} },
             {new Options("security_opt",ValueType.List)},
@@ -260,16 +267,15 @@ namespace YmlCreate
                 })}
             })},
             {new Options("userns_mode",ValueType.One)},
-            {new Options("volumes",ValueType.List){ AdditionalInfo="Short"} },
             {new Options("volumes",ValueType.List,new List<Options>()
             {
-                {new Options("type",ValueType.ComboBox){ComboBoxValues = new string[]{"volume","bind","tmpfs","npipe" } } },
+                {new Options("type",ValueType.ComboBox){ComboBoxValues = new List<string>(){"volume","bind","tmpfs","npipe" } } },
                 {new Options("source",ValueType.One)},
                 {new Options("target",ValueType.One)},
                 {new Options("read_only",ValueType.Bool){ DefaultValue=false }},
                 {new Options("bind",ValueType.Empty,new List<Options>()
                 {
-                    new Options("propagation",ValueType.ComboBox){ComboBoxValues=new string[]{ "rprivate", "private", "rshared", "shared", "rslave", "slave"} }
+                    new Options("propagation",ValueType.ComboBox){ComboBoxValues=new List<string>(){ "rprivate", "private", "rshared", "shared", "rslave", "slave"} }
                 })},
                 {new Options("volume",ValueType.Empty,new List<Options>()
                 {
@@ -279,7 +285,7 @@ namespace YmlCreate
                 {
                     new Options("size",ValueType.Number){ HelpInfo ="в байтах"}
                 })},
-                {new Options("consistency",ValueType.ComboBox){ComboBoxValues=new string[]{ "consistent", "delegated", "cached"} }}
+                {new Options("consistency",ValueType.ComboBox){ComboBoxValues=new List<string>(){ "consistent", "delegated", "cached"} }}
             }){ AdditionalInfo="Long"} },
             {new Options("user",ValueType.One)},
             {new Options("working_dir",ValueType.One)},
@@ -310,7 +316,7 @@ namespace YmlCreate
             external,
             driver_opts,
             {new Options("attachable",ValueType.Bool)},
-            {new Options("config",ValueType.List,new List<Options>(){ new Options("subnet",ValueType.One)})},
+            //{new Options("config",ValueType.Special,new List<Options>(){ new Options("subnet",ValueType.One)})},
             {new Options("internal",ValueType.Bool)}
         });
         static readonly Options ConfigsOptions = new Options("configs", ValueType.Empty, new List<Options>()

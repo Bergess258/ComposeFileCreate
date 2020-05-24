@@ -27,7 +27,7 @@ namespace YmlCreate
         public string AdditionalInfo { get; set; }//Like Long or Short
         public ValueType ValueType { get; set; }
         public List<Options> childs { get; set; }
-        public string[] ComboBoxValues { get; set; } // Uses also for list values
+        public List<string> ComboBoxValues { get; set; } // Uses also for list values
         public Options(string name,ValueType valueType, List<Options> childOptions)
         {
             Name = name;
