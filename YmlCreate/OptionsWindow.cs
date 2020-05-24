@@ -28,8 +28,8 @@ namespace YmlCreate
             Name = "MainWindow";
             Title = "Настройки "+ ServiceName;
             WindowPosition = ((WindowPosition)(4));
-            DefaultWidth = 400;
-            DefaultHeight = 700;
+            DefaultWidth = 700;
+            DefaultHeight = 800;
             GtkScrolledWindow1 = new ScrolledWindow();
             GtkScrolledWindow1.Name = "GtkScrolledWindow1";
             GtkScrolledWindow1.ShadowType = ((ShadowType)(1));
@@ -45,6 +45,7 @@ namespace YmlCreate
             col2.PackStart(col2TextRendererFirst, true);
 
             TreeViewColumn col3 = new TreeViewColumn();
+            col3.Expand = false;
             col3.Title = "Столбец ввода значений у свойств с bool переменными и простыми записями после них";
             CellRendererText col3TextRenderer = new CellRendererText();
             col3TextRenderer.Editable = true;
@@ -61,11 +62,14 @@ namespace YmlCreate
             //ListStore m = new ListStore();
             CellRendererCombo col3Combo = new CellRendererCombo();
             col3Combo.Editable = true;
+            col3Combo.TextColumn = 0;
+            col3Combo.HasEntry = false;
 
             //Using the same(no need to create another)
             col3TextRenderer.Edited += Cell_Edited;
             col3SpinR.Edited += Cell_Edited;
-            col3Combo.Edited += Cell_Edited;
+            //Using the same causes abnormal heigth change in selected row
+            col3Combo.Edited += Combo_Edited;
             col3Toggle.Xalign = 0;
             col3SpinR.Xalign = 0;
             col3Combo.Xalign = 0;
@@ -221,6 +225,15 @@ namespace YmlCreate
             
             Store.GetIter(out iter, new TreePath(args.Path));
             Store.SetValue(iter, 2, args.NewText);
+            Options someText = (Options)Store.GetValue(iter, 0);
+            someText.Value = args.NewText;
+        }
+
+        private void Combo_Edited(object o, EditedArgs args)
+        {
+            TreeIter iter;
+
+            Store.GetIter(out iter, new TreePath(args.Path));
             Options someText = (Options)Store.GetValue(iter, 0);
             someText.Value = args.NewText;
         }
