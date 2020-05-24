@@ -17,7 +17,11 @@ namespace YmlCreate
             Stack<KeyValuePair<int,string>> stack = new Stack<KeyValuePair<int, string>>();
             foreach(KeyValuePair<string, List<Options>> pair in Services)
             {
-                if(WriteThisOption(pair.Value[0],ref stack,2))
+                bool t = false;
+                    foreach (Options temp in pair.Value[0].childs)
+                        if (WriteThisOption(temp, ref stack, 2))
+                            t = true;
+                if (t)
                     stack.Push(new KeyValuePair<int, string>(1, pair.Key + ":"));
             }
 
@@ -27,26 +31,14 @@ namespace YmlCreate
                 mainStr += WriteStack(stack);
             }
 
-            if (WriteThisOption(Services.First().Value[1], ref stack, 2))
-            {
-                stack.Push(new KeyValuePair<int, string>(0, "volumes:"));
+            if (WriteThisOption(Services.First().Value[1], ref stack, 0))
                 mainStr += WriteStack(stack);
-            }
-            if (WriteThisOption(Services.First().Value[2], ref stack, 2))
-            {
-                stack.Push(new KeyValuePair<int, string>(0, "networks:"));
+            if (WriteThisOption(Services.First().Value[2], ref stack, 0))
                 mainStr += WriteStack(stack);
-            }
-            if (WriteThisOption(Services.First().Value[3], ref stack, 2))
-            {
-                stack.Push(new KeyValuePair<int, string>(0, "configs:"));
+            if (WriteThisOption(Services.First().Value[3], ref stack, 0))
                 mainStr += WriteStack(stack);
-            }
-            if (WriteThisOption(Services.First().Value[4], ref stack, 2))
-            {
-                stack.Push(new KeyValuePair<int, string>(0, "secrets:"));
+            if (WriteThisOption(Services.First().Value[4], ref stack, 0))
                 mainStr += WriteStack(stack);
-            }
             System.IO.File.WriteAllText(path, mainStr);
         }
 

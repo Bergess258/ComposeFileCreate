@@ -1,66 +1,12 @@
 version: "3,8"
-  services:
-  traefik:
-    service: 
-      tty: true
-      hostname: ghjlkj
-      user: gf
-      ulimits: 
-        nofile: 
-          hard: hfg
-      stop_signal: jdjh
-      credential_spec: 
-        file: h
-  postgres:
-    service: 
-      build: 
-        cache_from
-          - ghf
-      restart: always
+services:
   couchbase:
-    service: 
-      stdin_open: true
-      privileged: true
-      logging: 
-        options: 
-          gelf: 
-            gelf-compression-type: none
-            gelf-address: tykl
-        driver: gelf
-      isolation: hyperv
-      cap_drop
-        - ghf
-      deploy: 
-        restart_policy: 
-          condition: on-failure
-        resources: 
-          reservations: 
-            cpus: 25
-          limits: 
-            cpus: 50
-      environment
-        fdgkj: tgfhjk
-      build: 
-        shm_size: 10000000000
-        cache_from
-          - dfgh
-        context: dgfj
-        args
-          gfj: ghfj
-      restart: on-failure
-      image: hgghfk
-  volumes:
-    volume: 
-      external: true
-      name: same
-  networks:
-    networks: 
-      external: true
-      name: same
-  configs:
-    configs: 
-      external: true
-  secrets:
-    secrets: 
-      name: same
-      external: true
+    restart: always
+  volumes: 
+    external: true
+  networks: 
+    attachable: true
+  configs: 
+    external: true
+  secrets: 
+    external: true

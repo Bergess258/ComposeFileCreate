@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>YmlCreate</id>
+    <version>1.0.0</version>
+    <authors>YmlCreate</authors>
+    <owners>YmlCreate</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="GtkSharp" version="3.22.25.74" exclude="Build,Analyzers" />
+        <dependency id="HtmlAgilityPack" version="1.11.23" exclude="Build,Analyzers" />
+        <dependency id="Selenium.Support" version="3.141.0" exclude="Build,Analyzers" />
+        <dependency id="Selenium.WebDriver" version="3.141.0" exclude="Build,Analyzers" />
+        <dependency id="Selenium.WebDriver.ChromeDriver" version="81.0.4044.13800" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\YmlCreate.runtimeconfig.json" target="lib\netcoreapp3.1\YmlCreate.runtimeconfig.json" />
+    <file src="C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\YmlCreate.dll" target="lib\netcoreapp3.1\YmlCreate.dll" />
+  </files>
+</package>

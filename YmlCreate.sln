@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YmlCreate", "YmlCreate\YmlCreate.csproj", "{D3D6FDF5-D2FC-4E52-8EDB-403F3483E278}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YmlCreate", "YmlCreate\YmlCreate.csproj", "{D3D6FDF5-D2FC-4E52-8EDB-403F3483E278}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup2", "Setup2\Setup2.vdproj", "{5F38AFFB-25AE-4BEE-ACAA-D95C0BAA0E3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{D3D6FDF5-D2FC-4E52-8EDB-403F3483E278}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3D6FDF5-D2FC-4E52-8EDB-403F3483E278}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3D6FDF5-D2FC-4E52-8EDB-403F3483E278}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F38AFFB-25AE-4BEE-ACAA-D95C0BAA0E3A}.Debug|Any CPU.ActiveCfg = Debug
+		{5F38AFFB-25AE-4BEE-ACAA-D95C0BAA0E3A}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

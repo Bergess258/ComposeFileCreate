@@ -32,9 +32,7 @@ C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCr
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\GioSharp.dll
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\GLibSharp.dll
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\GtkSharp.dll
-C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\HtmlAgilityPack.dll
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\PangoSharp.dll
-C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\System.Xml.XPath.XmlDocument.dll
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\obj\Debug\netcoreapp3.1\YmlCreate.csprojAssemblyReference.cache
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\obj\Debug\netcoreapp3.1\YmlCreate.Resources.resources
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\obj\Debug\netcoreapp3.1\YmlCreate.csproj.GenerateResource.cache
@@ -44,7 +42,4 @@ C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCr
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\obj\Debug\netcoreapp3.1\YmlCreate.dll
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\obj\Debug\netcoreapp3.1\YmlCreate.pdb
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\obj\Debug\netcoreapp3.1\YmlCreate.genruntimeconfig.cache
-C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
-C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\WebDriver.dll
-C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\bin\Debug\netcoreapp3.1\WebDriver.Support.dll
 C:\Users\Администратор.BERGESS\source\repos\ComposeFileCreate\YmlCreate\obj\Debug\netcoreapp3.1\YmlCreate.csproj.CoreCompileInputs.cache

@@ -79,5 +79,15 @@ namespace YmlCreate {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] MyFile {
+            get {
+                object obj = ResourceManager.GetObject("MyFile", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

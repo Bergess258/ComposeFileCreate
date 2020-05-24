@@ -218,10 +218,11 @@ namespace YmlCreate
 		private static void LoadAllServices()
 		{
 			//Deserialization of all services
-			IFormatter formatter = new BinaryFormatter();
-			Stream stream = new FileStream("MyFile.bin", FileMode.Open, FileAccess.Read, FileShare.Read);
-			AllServicesList = (List<Service>)formatter.Deserialize(stream);
-			stream.Close();
+			using (MemoryStream ms = new MemoryStream(Resources.MyFile))
+			{
+				IFormatter br = new BinaryFormatter();
+				AllServicesList = (List<Service>)br.Deserialize(ms);
+			}
 			int length = AllServicesList.Count;
 			ServicesImg = new Pixbuf[length];
 			for (int i = 0; i < length; i++)

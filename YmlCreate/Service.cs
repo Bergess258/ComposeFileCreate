@@ -66,7 +66,7 @@ namespace YmlCreate
                         };
 
         //Combined by configuration reference into different lists 
-        static readonly Options GlobalOptions = new Options("service", ValueType.Empty, new List<Options>() {
+        static readonly Options GlobalOptions = new Options("services", ValueType.Empty, new List<Options>() {
             {new Options("image",ValueType.One)},
             {new Options("restart",ValueType.ComboBox){ DefaultValue = "no", ComboBoxValues = new List<string>(){ "no", "always","on-failure","unless-stopped"}}},
             {new Options("build",ValueType.OneOrEmpty, new List<Options>()
@@ -304,7 +304,7 @@ namespace YmlCreate
             {new Options("stdin_open",ValueType.Bool){ DefaultValue=false }},
             {new Options("tty",ValueType.Bool){ DefaultValue=false }}
         });
-        static readonly Options VolumeOptions = new Options("volume", ValueType.Empty, new List<Options>(){
+        static readonly Options VolumeOptions = new Options("volumes", ValueType.Empty, new List<Options>(){
             new Options(labels),
             new Options(driver),
             new Options(name),
