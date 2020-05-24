@@ -43,11 +43,16 @@ namespace YmlCreate
         {
             Name = t.Name;
             ValueType = t.ValueType;
+            DefaultValue = t.DefaultValue;
+            HelpInfo = t.HelpInfo;
+            AdditionalInfo = t.AdditionalInfo;
+            ValueType = t.ValueType;
+            ComboBoxValues = t.ComboBoxValues;
             if (t.childs != null)
             {
                 childs = new List<Options>();
                 foreach (Options temp in t.childs)
-                    childs.Add(temp);
+                    childs.Add(new Options(temp));
             }
         }
     }

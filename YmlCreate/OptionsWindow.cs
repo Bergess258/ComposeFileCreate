@@ -248,7 +248,7 @@ namespace YmlCreate
                 if (temp.Value == null)
                     tog.Active = (bool)temp.DefaultValue;
                 else
-                    tog.Active = temp.Value=="";
+                    tog.Active = temp.Value=="True";
             }
         }
 
@@ -291,6 +291,11 @@ namespace YmlCreate
         {
             Options temp = (Options)model.GetValue(iter, 0);
             cell.Visible = temp.ValueType == ValueType.One || temp.ValueType == ValueType.Time || temp.ValueType == ValueType.OneOrEmpty;
+            if (cell.Visible)
+            {
+                if (temp.Value != null)
+                    (cell as CellRendererText).Text = temp.Value;
+            }
         }
 
         private void Cell_Edited(object o, EditedArgs args)

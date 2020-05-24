@@ -96,8 +96,12 @@ namespace YmlCreate
 			//Selected Services StoreList of string and Image
 			SelectedServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf),typeof(List<Options>));
 			List<Options> temp = new List<Options>();
-			foreach (Options t in AllServiceOptions.allConfigs)
-				temp.Add(t);
+			//Oy eeeeeeeeeee It's FASTERRRRRRRR
+			temp.Add(new Options(AllServiceOptions.allConfigs[0]));
+			temp.Add(AllServiceOptions.allConfigs[1]);
+			temp.Add(AllServiceOptions.allConfigs[2]);
+			temp.Add(AllServiceOptions.allConfigs[3]);
+			temp.Add(AllServiceOptions.allConfigs[4]);
 			SelectedServices.AppendValues(0,"Свой сервис", OwnService, temp);
 			SelectedServices.SetSortColumnId(0, SortType.Ascending);
 			// Selected Services IconViewSettings
@@ -164,6 +168,7 @@ namespace YmlCreate
 			Btn_Create.Name = "Btn_Search";
 			Btn_Create.UseUnderline = true;
 			Btn_Create.Label = "Создать Yaml";
+			Btn_Create.Pressed += OnCreateYmlPressed;
 			hbox3.PackStart(Btn_Create, false, false, 0);
 
 			Loading.Wait();
@@ -281,8 +286,12 @@ namespace YmlCreate
 			string name = IV_AllServices.Model.GetValue(iter, 1).ToString();
 			Pixbuf Img = (Pixbuf)(IV_AllServices.Model.GetValue(iter, 2));
 			List<Options> temp = new List<Options>();
-			foreach (Options t in AllServiceOptions.allConfigs)
-				temp.Add(t);
+			//Oy eeeeeeeeeee It's FASTERRRRRRRR
+			temp.Add(new Options(AllServiceOptions.allConfigs[0]));
+			temp.Add(AllServiceOptions.allConfigs[1]);
+			temp.Add(AllServiceOptions.allConfigs[2]);
+			temp.Add(AllServiceOptions.allConfigs[3]);
+			temp.Add(AllServiceOptions.allConfigs[4]);
 			SelectedServices.AppendValues(c,name,Img,temp);
 			IV_AllServices.ThawChildNotify();
 			AllServices.Remove(ref iter);
@@ -295,6 +304,25 @@ namespace YmlCreate
 			IV_SelectedServices.Model.GetIter(out iter, a.Path);
 			List<Options> te = (List<Options>)(IV_SelectedServices.Model.GetValue(iter, 3));
 			new OptionsWindow((string)(IV_SelectedServices.Model.GetValue(iter, 1)), te);
+		}
+
+		protected void OnCreateYmlPressed(object sender, EventArgs e)
+		{
+			ShowSaveDialog();
+		}
+
+		public string ShowSaveDialog()
+		{
+			string result = null;
+			Gtk.FileChooserDialog saveDialog = new Gtk.FileChooserDialog("Save as", null, Gtk.FileChooserAction.Save, "Cancel", Gtk.ResponseType.Cancel, "Save", Gtk.ResponseType.Accept);
+			saveDialog.SetCurrentFolder(Environment.CurrentDirectory+@"\Yaml");
+			if (saveDialog.Run() == (int)Gtk.ResponseType.Accept)
+			{
+				result = saveDialog.Filename;
+			}
+
+			saveDialog.Dispose();
+			return result;
 		}
 	}
 }

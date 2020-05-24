@@ -315,9 +315,9 @@ namespace YmlCreate
             name,
             external,
             driver_opts,
-            {new Options("attachable",ValueType.Bool)},
+            {new Options("attachable",ValueType.Bool){ DefaultValue=false }},
             //{new Options("config",ValueType.Special,new List<Options>(){ new Options("subnet",ValueType.One)})},
-            {new Options("internal",ValueType.Bool)}
+            {new Options("internal",ValueType.Bool){ DefaultValue=false }}
         });
         static readonly Options ConfigsOptions = new Options("configs", ValueType.Empty, new List<Options>()
         {

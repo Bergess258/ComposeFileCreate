@@ -8,8 +8,8 @@ namespace YmlCreate
     {
         static void Main(string[] args)
         {
-
-            //Parsing.Start();
+            //Folder for yaml files
+            System.IO.Directory.CreateDirectory("Yaml");
 
             Application.Init();
             //Create the Window
