@@ -1,6 +1,4 @@
 ﻿using Gtk;
-using System.Collections.Generic;
-using System.Threading;
 
 namespace YmlCreate
 {

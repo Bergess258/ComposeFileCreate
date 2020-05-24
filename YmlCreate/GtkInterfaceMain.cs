@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Linq;
 using Gdk;
 using Gtk;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace YmlCreate
 {
