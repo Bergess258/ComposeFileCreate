@@ -12,7 +12,7 @@ namespace YmlCreate
         ListWithValue,
         Number,
         //Time,
-        Special, //Some values with different ends like ns,ms,s,m and other
+        Special, //Some values with different ends like for config Long
         ComboBox,//Some const values choose from
         Bool
     }
@@ -20,7 +20,7 @@ namespace YmlCreate
     {
         public string Name { get; set; }
         public string Value { get; set; }
-        public object DefaultValue { get; set; }
+        public object DefaultValue { get; set; } // Default Value and Used as mark for value with quotes "value" 
         public string HelpInfo { get; set; } //SomeUseful info 
         public string AdditionalInfo { get; set; }//Like Long or Short
         public ValueType ValueType { get; set; }
@@ -37,6 +37,8 @@ namespace YmlCreate
             Name = name;
             ValueType = valueType;
         }
+
+        //Clone
         public Options(Options t)
         {
             Name = t.Name;

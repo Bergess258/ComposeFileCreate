@@ -27,7 +27,7 @@ namespace YmlCreate
                 stack.Push(new KeyValuePair<int, string>(0, "services:"));
                 mainStr += WriteStack(stack);
             }
-
+            //Checking another options by hands) All of services have the same values for options below
             if (WriteThisOption(Services.First().Value[1], ref stack, 0))
                 mainStr += WriteStack(stack);
             if (WriteThisOption(Services.First().Value[2], ref stack, 0))
@@ -46,10 +46,10 @@ namespace YmlCreate
                 if (option.Value != null)
                     if (option.Value != "")
                     {
-                        if(option.DefaultValue==null)
+                        if(option.DefaultValue==null)// Using it as mark for "" value
                             stack.Push(new KeyValuePair<int, string>(i, option.Name + ": " + option.Value));
                         else
-                            if (option.Name != "shm_size")
+                            if (option.Name != "shm_size")//Should check this because of it's special writing type
                                 stack.Push(new KeyValuePair<int, string>(i, option.Name + ": \"" + option.Value + "\""));
                             else
                             {
@@ -70,12 +70,12 @@ namespace YmlCreate
             else
                 if (option.ValueType == ValueType.List || option.ValueType == ValueType.ListWithValue)
                 {
-                    if (option.ComboBoxValues != null)
-                    {
+                    if (option.ComboBoxValues != null)//As i wrote ComboBoxValues is used for lists values
+                {
                         //Write bool value with ''
                         if (option.ValueType == ValueType.List)
                             foreach (string str in option.ComboBoxValues)
-                                if (option.DefaultValue != null)
+                                if (option.DefaultValue != null) // Using it as mark for "" value
                                     stack.Push(new KeyValuePair<int, string>(i+1, "- \"" + str + "\""));
                                 else
                                     stack.Push(new KeyValuePair<int, string>(i+1, "- " + str));

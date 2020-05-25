@@ -1,8 +1,4 @@
 version: "3,8"
 services:
-  traefik:
-    service: 
-      restart: always
   couchbase:
-    service: 
-      restart: always
+    restart: always

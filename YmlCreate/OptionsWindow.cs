@@ -48,10 +48,8 @@ namespace YmlCreate
             HBox hbox = new HBox();
 
             tree = new TreeView();
-            //tree.ButtonPressEvent +=Sele
             tree.RowActivated += new RowActivatedHandler(SelectRow);
             GtkScrolledWindow1.Add(tree);
-            //TreeViewColumn col2 = new TreeViewColumn();
 
             TreeViewColumn col2 = new TreeViewColumn();
             CellRendererText col2TextRendererFirst = new CellRendererText();
@@ -72,7 +70,6 @@ namespace YmlCreate
             Adjustment adjCol3SpinR = new Adjustment(0, 0, 100000, 1, 10, 0);
             col3SpinR.Adjustment = adjCol3SpinR;
             
-            //ListStore m = new ListStore();
             CellRendererCombo col3Combo = new CellRendererCombo();
             col3Combo.Editable = true;
             col3Combo.TextColumn = 0;
@@ -190,8 +187,8 @@ namespace YmlCreate
             CombinedViewForValueTypes.Visible = false;
         }
 
-        //I didn't find other ophion to put different values in the same column(
-        //So there ifs for each type of values
+        //I didn't find other option to put different values in the same column(
+        //So there if's for each type of values that suits column
         void fillStore(TreeIter it,Options t)
         {
             if(t.ValueType == ValueType.One || t.ValueType == ValueType.OneOrEmpty)

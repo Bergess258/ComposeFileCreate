@@ -1,8 +1,19 @@
 version: "3,8"
 services:
-  traefik:
-    service: 
-      restart: always
   couchbase:
-    service: 
-      restart: always
+    isolation: process
+    deploy: 
+      restart_policy: 
+        condition: on-failure
+      resources: 
+        reservations: 
+          cpus: 25
+        limits: 
+          cpus: 50
+    build: 
+      shm_size: 10000
+      cache_from
+        - abdya
+        - ghj
+      dockerfile: lel
+    restart: always

@@ -28,7 +28,7 @@ namespace YmlCreate
     {
         const string durationHelp = "Поддерживаются us, ms, s, m, h.";
 
-        //Definitions for options used more than once
+        //Definitions for options used more than once and then clone them
         static readonly Options args = new Options("args", ValueType.ListWithValue);
         static readonly Options labels = new Options("labels", ValueType.ListWithValue) { DefaultValue = true };
         static readonly Options cpus = new Options("cpus", ValueType.One);

@@ -10,7 +10,6 @@ namespace YmlCreate
             System.IO.Directory.CreateDirectory("Yaml");
 
             Application.Init();
-            //Create the Window
             MainWindow main = new MainWindow();
             Application.Run();
         }

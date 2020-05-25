@@ -43,6 +43,7 @@ namespace YmlCreate
 		private static IconView IV_AllServices;
 		private ScrolledWindow GtkScrolledWindow1;
 		private static ListStore AllServices;
+
 		private static CancellationTokenSource ts = new CancellationTokenSource();
 		private static CancellationToken ct = ts.Token;
 		private Task T_Search = new Task(Search,ct);
@@ -67,15 +68,16 @@ namespace YmlCreate
 			Name = "MainWindow";
 			Title = "Построение yml файла на основе заданных сервисов";
 			WindowPosition = ((WindowPosition)(4));
-			// Container child MainWindow.Gtk.Container+ContainerChild
+
+			//Main Hbox for separation window
 			hbox1 = new HBox();
 			hbox1.Name = "hbox1";
 			hbox1.Spacing = 2;
-			// Container child hbox1.Gtk.Box+BoxChild
+
 			vbox1 = new VBox();
 			vbox1.Name = "vbox1";
 			vbox1.Spacing = 1;
-			// Container child vbox1.Gtk.Box+BoxChild
+
 			label1 = new Label();
 			label1.Name = "label1";
 			label1.LabelProp = "Выбранные на данный момент";
@@ -92,7 +94,6 @@ namespace YmlCreate
 			//Selected Services StoreList of string and Image
 			SelectedServices = new ListStore(typeof(int),typeof(string), typeof(Pixbuf),typeof(List<Options>));
 			List<Options> temp = new List<Options>();
-			//Oy eeeeeeeeeee It's FASTERRRRRRRR
 			temp.Add(new Options(AllServiceOptions.allConfigs[0]));
 			temp.Add(AllServiceOptions.allConfigs[1]);
 			temp.Add(AllServiceOptions.allConfigs[2]);
@@ -100,6 +101,7 @@ namespace YmlCreate
 			temp.Add(AllServiceOptions.allConfigs[4]);
 			SelectedServices.AppendValues(0,"Свой сервис", OwnService, temp);
 			SelectedServices.SetSortColumnId(0, SortType.Ascending);
+
 			// Selected Services IconViewSettings
 			IV_SelectedServices = new IconView(SelectedServices);
 			IV_SelectedServices.CanFocus = true;
