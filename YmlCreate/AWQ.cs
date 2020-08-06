@@ -69,8 +69,7 @@ namespace YmlCreate
                         The condition s+m < n is necessary for  
                         the case when pattern occurs at the end  
                         of text */
-                    //s += (s + m < n) ? m - badchar[txt[s + m]] : 1;
-
+                    //s += (s + m < n) ? m - badchar[txt[s + m]] : 1; There's no need to search for another so uncomment it and delete return true if you need 
                 }
 
                 else

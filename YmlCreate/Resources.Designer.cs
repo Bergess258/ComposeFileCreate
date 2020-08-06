@@ -63,6 +63,16 @@ namespace YmlCreate {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Byte[].
         /// </summary>
+        internal static byte[] CreateYml {
+            get {
+                object obj = ResourceManager.GetObject("CreateYml", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
         internal static byte[] DefultServiceIcon {
             get {
                 object obj = ResourceManager.GetObject("DefultServiceIcon", resourceCulture);
@@ -86,6 +96,16 @@ namespace YmlCreate {
         internal static byte[] MyFile {
             get {
                 object obj = ResourceManager.GetObject("MyFile", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] Settings {
+            get {
+                object obj = ResourceManager.GetObject("Settings", resourceCulture);
                 return ((byte[])(obj));
             }
         }

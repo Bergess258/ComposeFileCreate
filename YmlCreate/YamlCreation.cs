@@ -9,7 +9,7 @@ namespace YmlCreate
         public static void Create(string path,Dictionary<string,List<Options>> Services)
         {
             if (!path.Contains(".yaml") && !path.Contains(".yml"))
-                path += ".yaml";
+                path += ".yml";
             string mainStr = "version: \""+ Version + "\"\n";
             Stack<KeyValuePair<int,string>> stack = new Stack<KeyValuePair<int, string>>();
             foreach(KeyValuePair<string, List<Options>> pair in Services)

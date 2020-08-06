@@ -7,6 +7,9 @@ using Gdk;
 using Gtk;
 using System.Threading;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
+using System.Collections.Specialized;
+using System.Text;
 
 namespace YmlCreate
 {
@@ -15,8 +18,15 @@ namespace YmlCreate
 		const int Col_DisplayName = 1;
 		const int Col_Pixbuf = 2;
 		const int IV_ItemWidth = 70;
+		const int MainWindowHeight = 400;
+		const int MainWindowWidth = 655;
+		static bool SettingsOpened = false;
 		static Pixbuf DefaultServiceIcon = new Pixbuf(Resources.DefultServiceIcon);
 		static Pixbuf OwnService = new Pixbuf(Resources.IconOwnService);
+		static Pixbuf Settings = new Pixbuf(Resources.Settings,30,30);
+		static Pixbuf CreateYml = new Pixbuf(Resources.CreateYml, 30,30);
+
+		private SettingsWindow settingsWindow;
 
 		private HBox hbox1;
 
@@ -25,6 +35,7 @@ namespace YmlCreate
 		private Label label1;
 
 		private Button Btn_Create;
+		private Button Btn_Settings;
 
 		private VBox vbox2;
 
@@ -68,6 +79,8 @@ namespace YmlCreate
 			Name = "MainWindow";
 			Title = "Построение yml файла на основе заданных сервисов";
 			WindowPosition = ((WindowPosition)(4));
+			DefaultWidth = MainWindowWidth;
+			DefaultHeight = MainWindowHeight;
 
 			//Main Hbox for separation window
 			hbox1 = new HBox();
@@ -161,13 +174,30 @@ namespace YmlCreate
 			//Just to create empty space after input field
 			Vbox_Search.PackStart(new Separator(Orientation.Horizontal), false, false, 0);
 			hbox3.PackStart(Vbox_Search, false, false, 0);
+
 			Btn_Create = new Button();
 			Btn_Create.CanFocus = true;
 			Btn_Create.Name = "Btn_Search";
 			Btn_Create.UseUnderline = true;
 			Btn_Create.Label = "Создать Yaml";
+			Btn_Create.Image = new Image(CreateYml);
+			Btn_Create.ImagePosition = PositionType.Top;
+			Btn_Create.AlwaysShowImage = true;
 			Btn_Create.Pressed += OnCreateYmlPressed;
 			hbox3.PackStart(Btn_Create, false, false, 0);
+
+			Btn_Settings = new Button();
+			Btn_Settings.CanFocus = true;
+			Btn_Settings.Name = "Btn_Settings";
+			Btn_Settings.UseUnderline = true;
+			Btn_Settings.Label = "Настройки";
+			Btn_Settings.Image = new Image(Settings);
+			Btn_Settings.ImagePosition = PositionType.Top;
+			Btn_Settings.AlwaysShowImage = true;
+			Btn_Settings.Pressed += OnSettingsPressed;
+
+			//Btn_Settings.Pressed += OnCreateYmlPressed;
+			hbox3.PackStart(Btn_Settings, false, false, 0);
 
 			Loading.Wait();
 			//All Services StoreList of their name and Image
@@ -205,12 +235,11 @@ namespace YmlCreate
 			vbox2.Add(vbox4);
 			hbox1.Add(vbox2);
 			Add(hbox1);
-			DefaultWidth = 817;
-			DefaultHeight = 400;
 			ShowAll();
 			DeleteEvent += new DeleteEventHandler(OnDeleteEvent);
 			IV_AllServices.ItemActivated += new ItemActivatedHandler(OnIV_AllServicesItemActivated);
 			IV_SelectedServices.ItemActivated += new ItemActivatedHandler(OnIV_SelectedServicesItemActivated);
+			Task.Run(() => LoadVersionsOfComposeFileFromSite());
 		}
 
 		private static void LoadAllServices()
@@ -323,10 +352,23 @@ namespace YmlCreate
 			Yaml.Create(r,Services);
 		}
 
+		protected void OnSettingsPressed(object sender, EventArgs e)
+		{
+            if (!SettingsOpened)
+            {
+				settingsWindow = new SettingsWindow() { WindowClosing = ClosedSettingsWindwos};
+				SettingsOpened = true;
+			}
+		}
+		private static void ClosedSettingsWindwos()
+        {
+			SettingsOpened = false;
+		}
+
 		public string ShowSaveDialog()
 		{
 			string result = null;
-			Gtk.FileChooserDialog saveDialog = new Gtk.FileChooserDialog("Save as", null, Gtk.FileChooserAction.Save, "Cancel", Gtk.ResponseType.Cancel, "Save", Gtk.ResponseType.Accept);
+			Gtk.FileChooserDialog saveDialog = new Gtk.FileChooserDialog("Сохранить как", null, Gtk.FileChooserAction.Save, "Отмена", Gtk.ResponseType.Cancel, "Сохранить", Gtk.ResponseType.Accept);
 			saveDialog.SetCurrentFolder(Environment.CurrentDirectory+@"\Yaml");
 			FileFilter filter = new FileFilter();
 			filter.Name = "doc/pdf";
@@ -342,6 +384,30 @@ namespace YmlCreate
 
 			saveDialog.Dispose();
 			return result;
+		}
+
+		private void LoadVersionsOfComposeFileFromSite()
+        {
+			List<string> versions = new List<string>();
+			HtmlWeb web = new HtmlWeb();
+			HtmlDocument doc;
+			try
+            {
+				doc = web.Load(@"https://docs.docker.com/compose/compose-file/");
+			}
+            catch
+            {
+				return;
+            }
+			HtmlNode tbody = doc.DocumentNode.SelectSingleNode("//tbody");
+			foreach (HtmlNode t in tbody.ChildNodes)
+				if (t.InnerLength > 5)
+					if (!versions.Contains(t.ChildNodes[1].InnerText))
+						versions.Add(t.ChildNodes[1].InnerText);
+					else
+						break;
+			PersonalSettings.appConfig.ComposeFileVerions = versions.ToArray();
+			PersonalSettings.Save();
 		}
 	}
 }
