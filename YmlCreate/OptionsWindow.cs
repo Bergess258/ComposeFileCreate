@@ -114,11 +114,16 @@ namespace YmlCreate
             for (int i = 0; i < length; i++)
             {
                 TreeIter iter = Store.AppendValues(Options[i], null, null);
-                int length2 = Options[i].childs.Count;
-                for (int j = 0; j < length2; j++)
+                if (Options[i].childs != null)
                 {
-                    fillStore(iter, Options[i].childs[j]);
-                }  
+                    int length2 = Options[i].childs.Count;
+                    for (int j = 0; j < length2; j++)
+                    {
+                        fillStore(iter, Options[i].childs[j]);
+                    }
+                }
+                else
+                    Store.AppendValues(iter, Options[i], null, "");
             }
 
             col2.SetCellDataFunc(col2TextRendererFirst, new TreeCellDataFunc(RenderText));
@@ -298,10 +303,21 @@ namespace YmlCreate
             Store.GetIter(out iter, new TreePath(args.Path));
             Store.SetValue(iter, 2, args.NewText);
             Options someText = (Options)Store.GetValue(iter, 0);
+            
             if (args.NewText != "")
+            {
+                if (someText.Name == "Название сервиса")
+                {
+                    Name = "Настройки " + args.NewText;
+                    ServiceName = Name;
+                }
                 someText.Value = args.NewText;
+            } 
             else
+            {
                 someText.Value = null;
+            }
+                
         }
 
         private void Combo_Edited(object o, EditedArgs args)

@@ -16,6 +16,8 @@ namespace YmlCreate
     }
     public class Settings
     {
+        public int MainWindowHeight { get; set; }
+        public int MainWindowWidth { get; set; }
         public string LastChoosedVersion { get; set; }
         public string[] ComposeFileVerions { get; set; }
     }

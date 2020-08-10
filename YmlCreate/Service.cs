@@ -338,8 +338,9 @@ namespace YmlCreate
         });
 
         //Dictionary for service config
-        public static readonly List<Options> allConfigs = new List<Options>(5) 
+        public static readonly List<Options> allConfigs = new List<Options>(5)
         {
+            new Options("Название сервиса",ValueType.One),
             GlobalOptions,
             VolumeOptions,
             NetworksOptions,

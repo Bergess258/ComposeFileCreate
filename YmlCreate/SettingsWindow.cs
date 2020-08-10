@@ -39,7 +39,6 @@ namespace YmlCreate
             ComposeVerL.Justify = ((Justification)(2));
             ComposeVerL.SingleLineMode = true;
             HBoxVersion.PackStart(ComposeVerL, false, true, 0);
-            int LastChooseVersion = 0;
             ComposeVerCB = new ComboBox(PersonalSettings.appConfig.ComposeFileVerions);
             TreeIter treeIter;
             ComposeVerCB.Model.IterNthChild(out treeIter, Array.IndexOf(PersonalSettings.appConfig.ComposeFileVerions, PersonalSettings.appConfig.LastChoosedVersion));
@@ -53,7 +52,6 @@ namespace YmlCreate
             HBoxVersion.Margin = 2;
             vBox.PackStart(HBoxVersion,false, false, 0);
             Add(vBox);
-            ShowAll();
         }
 
         private void OnComposeVerEChanged(object sender, EventArgs e)

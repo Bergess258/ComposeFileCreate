@@ -18,15 +18,15 @@ namespace YmlCreate
 		const int Col_DisplayName = 1;
 		const int Col_Pixbuf = 2;
 		const int IV_ItemWidth = 70;
-		const int MainWindowHeight = 400;
-		const int MainWindowWidth = 655;
+		int MainWindowWidth;
+		int MainWindowHeight;
 		static bool SettingsOpened = false;
 		static Pixbuf DefaultServiceIcon = new Pixbuf(Resources.DefultServiceIcon);
 		static Pixbuf OwnService = new Pixbuf(Resources.IconOwnService);
 		static Pixbuf Settings = new Pixbuf(Resources.Settings,30,30);
 		static Pixbuf CreateYml = new Pixbuf(Resources.CreateYml, 30,30);
 
-		private SettingsWindow settingsWindow;
+		private static SettingsWindow settingsWindow;
 
 		private HBox hbox1;
 
@@ -79,9 +79,10 @@ namespace YmlCreate
 			Name = "MainWindow";
 			Title = "Построение yml файла на основе заданных сервисов";
 			WindowPosition = ((WindowPosition)(4));
-			DefaultWidth = MainWindowWidth;
-			DefaultHeight = MainWindowHeight;
-
+			DefaultWidth = PersonalSettings.appConfig.MainWindowWidth;
+			DefaultHeight = PersonalSettings.appConfig.MainWindowHeight;
+			MainWindowHeight = PersonalSettings.appConfig.MainWindowWidth;
+			MainWindowWidth = PersonalSettings.appConfig.MainWindowHeight;
 			//Main Hbox for separation window
 			hbox1 = new HBox();
 			hbox1.Name = "hbox1";
@@ -136,8 +137,7 @@ namespace YmlCreate
 			label2.Wrap = true;
 			label2.Justify = ((Justification)(2));
 			label2.SingleLineMode = true;
-			vbox2.Add(label2);
-			vbox2.SetChildPacking(label2, false, false, 0, PackType.Start);
+			vbox2.PackStart(label2, false, false, 0);
 			// Container child vbox2.Gtk.Box+BoxChild
 			vbox4 = new VBox();
 			vbox4.Name = "vbox4";
@@ -239,10 +239,11 @@ namespace YmlCreate
 			DeleteEvent += new DeleteEventHandler(OnDeleteEvent);
 			IV_AllServices.ItemActivated += new ItemActivatedHandler(OnIV_AllServicesItemActivated);
 			IV_SelectedServices.ItemActivated += new ItemActivatedHandler(OnIV_SelectedServicesItemActivated);
+			settingsWindow = new SettingsWindow() { WindowClosing = ClosedSettingsWindwos };
 			Task.Run(() => LoadVersionsOfComposeFileFromSite());
 		}
 
-		private static void LoadAllServices()
+        private static void LoadAllServices()
 		{
 			//Deserialization of all services
 			using (MemoryStream ms = new MemoryStream(Resources.MyFile))
@@ -261,6 +262,12 @@ namespace YmlCreate
 
 		protected void OnDeleteEvent(object sender, DeleteEventArgs a)
 		{
+			if (AllocatedHeight != MainWindowHeight || AllocatedWidth != MainWindowWidth)
+			{
+				PersonalSettings.appConfig.MainWindowHeight = AllocatedHeight;
+				PersonalSettings.appConfig.MainWindowWidth = AllocatedWidth;
+				PersonalSettings.Save();
+			}
 			Application.Quit();
 			a.RetVal = true;
 		}
@@ -315,11 +322,13 @@ namespace YmlCreate
 			Pixbuf Img = (Pixbuf)(IV_AllServices.Model.GetValue(iter, 2));
 			List<Options> temp = new List<Options>();
 			//Oy eeeeeeeeeee It's FASTERRRRRRRR
-			temp.Add(new Options(AllServiceOptions.allConfigs[0]));
-			temp.Add(AllServiceOptions.allConfigs[1]);
+			temp.Add(AllServiceOptions.allConfigs[0]);
+			temp.Add(new Options(AllServiceOptions.allConfigs[1]));
 			temp.Add(AllServiceOptions.allConfigs[2]);
 			temp.Add(AllServiceOptions.allConfigs[3]);
 			temp.Add(AllServiceOptions.allConfigs[4]);
+			temp.Add(AllServiceOptions.allConfigs[4]);
+			temp[0].Value = name;
 			SelectedServices.AppendValues(c,name,Img,temp);
 			IV_AllServices.ThawChildNotify();
 			AllServices.Remove(ref iter);
@@ -331,7 +340,8 @@ namespace YmlCreate
 			TreeIter iter;
 			IV_SelectedServices.Model.GetIter(out iter, a.Path);
 			List<Options> te = (List<Options>)(IV_SelectedServices.Model.GetValue(iter, 3));
-			new OptionsWindow((string)(IV_SelectedServices.Model.GetValue(iter, 1)), te);
+			string name = (string)(IV_SelectedServices.Model.GetValue(iter, 1));
+			new OptionsWindow(name, te);
 		}
 
 		protected void OnCreateYmlPressed(object sender, EventArgs e)
@@ -356,13 +366,14 @@ namespace YmlCreate
 		{
             if (!SettingsOpened)
             {
-				settingsWindow = new SettingsWindow() { WindowClosing = ClosedSettingsWindwos};
+				settingsWindow.ShowAll();
 				SettingsOpened = true;
 			}
 		}
 		private static void ClosedSettingsWindwos()
         {
 			SettingsOpened = false;
+			settingsWindow = new SettingsWindow() { WindowClosing = ClosedSettingsWindwos };
 		}
 
 		public string ShowSaveDialog()
