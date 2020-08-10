@@ -12,8 +12,10 @@ namespace YmlCreate
                 path += ".yml";
             string mainStr = "version: \""+ Version + "\"\n";
             Stack<KeyValuePair<int,string>> stack = new Stack<KeyValuePair<int, string>>();
-            foreach(KeyValuePair<string, List<Options>> pair in Services)
+            //ForEach service check its options
+            foreach (KeyValuePair<string, List<Options>> pair in Services)
             {
+                pair.Value.RemoveAt(0);
                 bool t = false;
                     foreach (Options temp in pair.Value[0].childs)
                         if (WriteThisOption(temp, ref stack, 2))

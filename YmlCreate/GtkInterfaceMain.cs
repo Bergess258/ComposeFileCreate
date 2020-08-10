@@ -313,35 +313,57 @@ namespace YmlCreate
 
 		//Service selection from all
 		protected void OnIV_AllServicesItemActivated(object o, ItemActivatedArgs a)
-		{
-			TreeIter iter;
-			IV_AllServices.FreezeChildNotify();
-			IV_AllServices.Model.GetIter(out iter,a.Path);
-			int c = (int)(IV_AllServices.Model.GetValue(iter, 0));
-			string name = IV_AllServices.Model.GetValue(iter, 1).ToString();
-			Pixbuf Img = (Pixbuf)(IV_AllServices.Model.GetValue(iter, 2));
-			List<Options> temp = new List<Options>();
-			//Oy eeeeeeeeeee It's FASTERRRRRRRR
-			temp.Add(AllServiceOptions.allConfigs[0]);
-			temp.Add(new Options(AllServiceOptions.allConfigs[1]));
-			temp.Add(AllServiceOptions.allConfigs[2]);
-			temp.Add(AllServiceOptions.allConfigs[3]);
-			temp.Add(AllServiceOptions.allConfigs[4]);
-			temp.Add(AllServiceOptions.allConfigs[4]);
-			temp[0].Value = name;
-			SelectedServices.AppendValues(c,name,Img,temp);
-			IV_AllServices.ThawChildNotify();
-			AllServices.Remove(ref iter);
-			OnSearchSChanged(new object(),new EventArgs());
-		}
+        {
+            TreeIter iter;
+            IV_AllServices.FreezeChildNotify();
+            IV_AllServices.Model.GetIter(out iter, a.Path);
+            AddToSelectedServices(IV_AllServices.Model.GetValue(iter, 1).ToString(), (Pixbuf)(IV_AllServices.Model.GetValue(iter, 2)));
+            IV_AllServices.ThawChildNotify();
+            AllServices.Remove(ref iter);
+            OnSearchSChanged(new object(), new EventArgs());
+        }
 
-		protected void OnIV_SelectedServicesItemActivated(object o, ItemActivatedArgs a)
+        private void AddToSelectedServices(string name, Pixbuf Img)
+        {
+            // Changed from thisint c = (int)(IV_AllServices.Model.GetValue(iter, 0)); to 
+            int c = SelectedServices.IterNChildren();
+            List<Options> temp = new List<Options>();
+            //Oy eeeeeeeeeee It's FASTERRRRRRRR
+            temp.Add(AllServiceOptions.allConfigs[0]);
+            temp.Add(new Options(AllServiceOptions.allConfigs[1]));
+            temp.Add(AllServiceOptions.allConfigs[2]);
+            temp.Add(AllServiceOptions.allConfigs[3]);
+            temp.Add(AllServiceOptions.allConfigs[4]);
+            temp.Add(AllServiceOptions.allConfigs[5]);
+            temp[0].Value = name;
+            SelectedServices.AppendValues(c, name, Img, temp);
+        }
+
+        protected void OnIV_SelectedServicesItemActivated(object o, ItemActivatedArgs a)
 		{
 			TreeIter iter;
 			IV_SelectedServices.Model.GetIter(out iter, a.Path);
 			List<Options> te = (List<Options>)(IV_SelectedServices.Model.GetValue(iter, 3));
 			string name = (string)(IV_SelectedServices.Model.GetValue(iter, 1));
-			new OptionsWindow(name, te);
+			if(name!= "Свой сервис")
+				new OptionsWindow(name, te);
+            else
+            {
+				int currNumb=-1;
+				TreeIter iterTemp;
+				SelectedServices.GetIterFirst(out iterTemp);
+				while (SelectedServices.IterNext(ref iterTemp))
+				{
+					string serviceName = ((List<Options>)SelectedServices.GetValue(iterTemp, 3))[0].Value;
+					if (serviceName.Contains("Свой сервис "))
+                    {
+						int numb = Convert.ToInt32(serviceName.Split(' ')[2]);
+						if (currNumb <= numb)
+							currNumb = numb;
+					}
+				}
+				AddToSelectedServices("Свой сервис "+ ++currNumb, DefaultServiceIcon);
+			}
 		}
 
 		protected void OnCreateYmlPressed(object sender, EventArgs e)

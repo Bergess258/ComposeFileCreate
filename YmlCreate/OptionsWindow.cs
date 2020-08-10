@@ -109,21 +109,15 @@ namespace YmlCreate
                     ((Options)Store.GetValue(iter, 0)).Value = temp.ToString();
                 }  
             };
-
-            int length = Options.Count;
-            for (int i = 0; i < length; i++)
+            Store.AppendValues(Options[0], null, "");
+            for (int i = 1; i < Options.Count; i++)
             {
                 TreeIter iter = Store.AppendValues(Options[i], null, null);
-                if (Options[i].childs != null)
+                int length2 = Options[i].childs.Count;
+                for (int j = 0; j < length2; j++)
                 {
-                    int length2 = Options[i].childs.Count;
-                    for (int j = 0; j < length2; j++)
-                    {
-                        fillStore(iter, Options[i].childs[j]);
-                    }
+                    fillStore(iter, Options[i].childs[j]);
                 }
-                else
-                    Store.AppendValues(iter, Options[i], null, "");
             }
 
             col2.SetCellDataFunc(col2TextRendererFirst, new TreeCellDataFunc(RenderText));
