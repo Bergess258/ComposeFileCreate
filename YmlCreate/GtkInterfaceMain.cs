@@ -239,8 +239,22 @@ namespace YmlCreate
 			DeleteEvent += new DeleteEventHandler(OnDeleteEvent);
 			IV_AllServices.ItemActivated += new ItemActivatedHandler(OnIV_AllServicesItemActivated);
 			IV_SelectedServices.ItemActivated += new ItemActivatedHandler(OnIV_SelectedServicesItemActivated);
+			IV_SelectedServices.ButtonPressEvent += new ButtonPressEventHandler(CheckForDelete) ;
 			settingsWindow = new SettingsWindow() { WindowClosing = ClosedSettingsWindwos };
 			Task.Run(() => LoadVersionsOfComposeFileFromSite());
+		}
+
+        private void CheckForDelete(object o, ButtonPressEventArgs args)
+        {
+			TreePath path = IV_SelectedServices.GetPathAtPos((int)args.Event.X, (int)args.Event.Y);
+            if (path != null)
+            {
+				TreeIter iter;
+				IV_SelectedServices.Model.GetIter(out iter,path);
+				string name = IV_SelectedServices.Model.GetValue(iter, 1).ToString();
+				if (args.Event.Button == 3&&name !="Свой сервис")
+					SelectedServices.Remove(ref iter);
+			}
 		}
 
         private static void LoadAllServices()
